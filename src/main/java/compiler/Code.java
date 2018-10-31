@@ -1,9 +1,9 @@
 package compiler;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.List;
 
 public class Code {
     private String code;
@@ -44,31 +44,63 @@ public class Code {
             return "Unable to save file: " + e.toString();
         }
 
+        StringBuilder response = new StringBuilder();
+
         try {
             Runtime rt = Runtime.getRuntime();
 
-            Process pr = rt.exec("D:\\Programy\\CodeBlocks\\MinGW\\bin\\g++ -o "+Constants.PATH_TO_SAVE+"\\program.exe "+Constants.PATH_TO_SAVE+"\\test.cpp");
+            Process pr = rt.exec("\"" + Constants.PATH_TO_CPP_COMPILER +"\" -o \""+Constants.PATH_TO_SAVE+"\\program.exe\" \""+Constants.PATH_TO_SAVE+"\\test.cpp\"");
 
             BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 
-            String response = "";
             String line=null;
 
             while((line=input.readLine()) != null) {
-                response += line + "\n";
+                response.append(line).append("\n");
                 System.out.println(line);
             }
 
             int exitVal = pr.waitFor();
+            if (exitVal == 0) {
+                response.append("Compilation succeeded!\n");
+            } else {
+                response.append("Compilation failed!\n");
+            }
             System.out.println("Program compilation ended with exit code: "+exitVal);
-
-            return response;
         } catch(Exception e) {
             System.out.println(e.toString());
             e.printStackTrace();
-            return e.toString();
+            response.append("Something went wrong with compilation phase..");
+            return response.toString();
         }
 
+        try {
+            response.append("\nRuntime: ");
+            final Process p1 = Runtime.getRuntime().exec("cmd /c \""+Constants.PATH_TO_SAVE+"\\program.exe\"");
+            //final Process p = Runtime.getRuntime().exec("cmd /c .\\program.exe");
 
+//            new Thread(new Runnable() {
+//                public void run() {
+                    BufferedReader input = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+
+                    String line = null;
+                    try {
+                        while ((line = input.readLine()) != null) {
+                            System.out.println(line);
+                            response.append(line +"\n");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+//                }
+//            }).start();
+
+            System.out.println("Running exit:" + p1.waitFor());
+            response.append("Running complete!");
+        } catch (Exception e) {
+            response.append("Running error: " + e.toString());
+        }
+        return response.toString();
     }
 }
