@@ -25,10 +25,22 @@
     <div class="form-group" align="center" style="margin:auto;">
         <div class="col-12 col-sm-8 col-md-6 col-lg-4" id="main">
             <label for="code">Write some code:</label>
-            <textarea rows="10" cols="50" class="form-control" id="code">Write your code here!</textarea>
+            <textarea rows="10" cols="50" class="form-control" id="code">#include &ltiostream&gt
+using namespace std;
+
+int main()
+{
+    cout << "Hello, World!";
+    return 0;
+}</textarea>
             <br>
 
             <button id="send" class="btn btn-primary" type="button" onclick="sendCode();">Wyślij</button>
+            <br>
+            <br>
+            <label for="compileResponse">Response:</label>
+            <textarea rows="5" cols="50" class="form-control" id="compileResponse"></textarea>
+            <br>
         </div>
     </div>
 </div>

@@ -8,12 +8,17 @@ function sendCode()
         type: "post",
         contentType: "application/json",
         data: JSON.stringify({
-            code: code
+            code: code,
+            language: "Cpp",
+            runCompiledProgram : false
         })
 
 
     }).then(function (data, status, jqxhr) {
-        alert('Server responded: ' + data);
+
+        $("#compileResponse").val('Status success, Server responded: ' + data);
+
+
     });
 
 }

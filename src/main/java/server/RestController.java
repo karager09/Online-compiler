@@ -20,7 +20,8 @@ public class RestController {
 
     @PostMapping("/api/compile/code")
     public String sayHello(@RequestBody Code receivedCode){
-        System.out.println(receivedCode.getCode());
-        return "I would compile this.. the other day.";
+        //System.out.println(receivedCode.getCode() +", " + receivedCode.getLanguage());
+        return receivedCode.run();
+//        return "I would compile this.. the other day.";
     }
 }
