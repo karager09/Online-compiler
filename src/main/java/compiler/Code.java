@@ -1,12 +1,12 @@
 package compiler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Arrays;
+import java.util.concurrent.*;
 
 public class Code {
     private String code;
+    private String input = "";
     private String language;
     private boolean runCompiledProgram;
 
@@ -16,6 +16,14 @@ public class Code {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input.replace("\n", "\0");
     }
 
     public String getLanguage() {
@@ -46,16 +54,17 @@ public class Code {
 
         StringBuilder response = new StringBuilder();
 
+        //compile program
         try {
             Runtime rt = Runtime.getRuntime();
 
             Process pr = rt.exec("\"" + Constants.PATH_TO_CPP_COMPILER +"\" -o \""+Constants.PATH_TO_SAVE+"\\program.exe\" \""+Constants.PATH_TO_SAVE+"\\test.cpp\"");
 
-            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            BufferedReader errorStream = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 
             String line=null;
 
-            while((line=input.readLine()) != null) {
+            while((line=errorStream.readLine()) != null) {
                 response.append(line).append("\n");
                 System.out.println(line);
             }
@@ -65,6 +74,7 @@ public class Code {
                 response.append("Compilation succeeded!\n");
             } else {
                 response.append("Compilation failed!\n");
+                return response.toString();
             }
             System.out.println("Program compilation ended with exit code: "+exitVal);
         } catch(Exception e) {
@@ -74,30 +84,79 @@ public class Code {
             return response.toString();
         }
 
+        //run compiled code
         try {
-            response.append("\nRuntime: ");
+            response.append("Runtime:\n");
             final Process p1 = Runtime.getRuntime().exec("cmd /c \""+Constants.PATH_TO_SAVE+"\\program.exe\"");
-            //final Process p = Runtime.getRuntime().exec("cmd /c .\\program.exe");
 
-//            new Thread(new Runnable() {
-//                public void run() {
-                    BufferedReader input = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+            final BufferedReader input = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+
+            Callable<String> readInput = new Callable<String>() {
+                public String call() {
 
                     String line = null;
+
                     try {
                         while ((line = input.readLine()) != null) {
-                            System.out.println(line);
                             response.append(line +"\n");
                         }
 
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } finally {
+                        try {
+                            input.close();
+                        } catch (Exception e) {
+                            System.out.println("Closing process: "+e.toString());
+                        }
                     }
-//                }
-//            }).start();
+                    return "cos";
+                }
+            };
 
-            System.out.println("Running exit:" + p1.waitFor());
-            response.append("Running complete!");
+
+            final BufferedReader error = new BufferedReader(new InputStreamReader(p1.getErrorStream()));
+            error.close();
+//            Callable<String> readError = new Callable<String>() {
+//                public String call() {
+//
+//                    String line = null;
+//
+//                    try {
+////                        error.close();
+//                        while ((line = input.readLine()) != null) {
+//                            System.out.println(line);
+//                            response.append("error: " +line +"\n");
+//                        }
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    return "cos";
+//                }
+//            };
+//            p1.getOutputStream().close();
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.invokeAll(Arrays.asList(readInput), Constants.MAX_DURATION_OF_RUNNING_CODE, TimeUnit.MILLISECONDS);
+            executor.shutdown();
+
+            var writer = new OutputStreamWriter(p1.getOutputStream());
+            writer.write(getInput());
+            writer.close();
+
+            if(!p1.waitFor(Constants.MAX_DURATION_OF_RUNNING_CODE,TimeUnit.MILLISECONDS)){
+                final Process taskkillProcess = Runtime.getRuntime().exec("taskkill /pid "+ p1.pid()+" /t /F");
+
+                System.out.println(new BufferedReader(new InputStreamReader(taskkillProcess.getErrorStream())).readLine());
+                System.out.println("Kill val: " + taskkillProcess.waitFor());
+
+                response.append("Process hasn't finished yet: killed him forcibly");
+            } else {
+                response.append("Running complete!");
+            }
+            System.out.println("Process ended.");
+
         } catch (Exception e) {
             response.append("Running error: " + e.toString());
         }

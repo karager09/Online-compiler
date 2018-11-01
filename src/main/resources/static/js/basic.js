@@ -1,6 +1,7 @@
 function sendCode()
 {
     var code = $("#code").val();
+    var input = $("#input").val();
 
     $.ajax({
         url: "http://localhost:8080/api/compile/code",
@@ -9,6 +10,7 @@ function sendCode()
         contentType: "application/json",
         data: JSON.stringify({
             code: code,
+            input: input,
             language: "Cpp",
             runCompiledProgram : false
         })
@@ -16,7 +18,7 @@ function sendCode()
 
     }).then(function (data, status, jqxhr) {
 
-        $("#compileResponse").val('Status success, Server responded: ' + data);
+        $("#compileResponse").val('Status success, Server response: \n' + data);
 
 
     });
