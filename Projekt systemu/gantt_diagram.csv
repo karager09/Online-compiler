@@ -1,0 +1,33 @@
+row number,Stopnie zaawansowania projektu,Przydzial,Status,start row,end row,duration row,,period/symbol,start period/symbol,type period/symbol,legend,comment period/symbol,end period,duration period,label period
+1,Wstepne zalozenia projektu,,Ok,10/8/2018 1:00:00 PM,10/15/2018 1:00:00 PM,5,,period:,10/8/2018 1:00:00 PM,#bcca26,Zadanie okoloprojektowe,,10/15/2018 1:00:00 PM,5,Glówne zalozenia
+1,Wstepne zalozenia projektu,,Ok,,,,,symbol:,10/15/2018 1:00:00 PM,89,Kamienie milowe,,,,
+1.1,Wymyslenie czego bedzie dotyczyl projekt,Piotr,Ok,10/10/2018 9:00:00 AM,10/11/2018 5:00:00 PM,2,,period:,10/10/2018 9:00:00 AM,#5fb5d5,Zadania dla calego zespolu,,10/11/2018 5:00:00 PM,2,
+1.2,Rozwiniecie pomyslu,"Piotr, Patrycja",Ok,10/11/2018 1:00:00 PM,10/15/2018 1:00:00 PM,2,,period:,10/11/2018 1:00:00 PM,#2775ac, ,,10/15/2018 1:00:00 PM,2,
+2,Pelna specyfikacja projektu,,Ok,10/15/2018 1:00:00 PM,10/29/2018 1:00:00 PM,10,,period:,10/15/2018 1:00:00 PM,#bcca26,Zadanie okoloprojektowe,,10/29/2018 1:00:00 PM,10,Pelna specyfikacja
+2,Pelna specyfikacja projektu,,Ok,,,,,symbol:,10/29/2018 1:00:00 PM,89,Kamienie milowe,,,,
+2.1,Wybór platformy,"Piotr, Patrycja",Ok,10/18/2018 9:00:00 AM,10/24/2018 1:00:00 PM,4.5,,period:,10/18/2018 9:00:00 AM,#5fb5d5,Zadania dla calego zespolu,,10/24/2018 1:00:00 PM,4.5,
+2.2,Sposób dzialania systemu,"Piotr, Patrycja",Ok,10/23/2018 9:00:00 AM,10/29/2018 1:00:00 PM,4.5,,period:,10/23/2018 9:00:00 AM,#2775ac, ,,10/29/2018 1:00:00 PM,4.5,
+2.3,Stworzenie specyfikacji projektu,"Piotr, Patrycja",Ok,10/25/2018 9:00:00 AM,10/29/2018 1:00:00 PM,2.5,,period:,10/25/2018 9:00:00 AM,#5fb5d5,Zadania dla calego zespolu,,10/29/2018 1:00:00 PM,2.5,
+3,Projekt systemu,"Piotr, Patrycja",Ok,10/29/2018 1:00:00 PM,11/5/2018 1:00:00 PM,5,,period:,10/29/2018 1:00:00 PM,#bcca26,Zadanie okoloprojektowe,,11/5/2018 1:00:00 PM,5,Projekt systemu
+3,Projekt systemu,"Piotr, Patrycja",Ok,,,,,symbol:,11/5/2018 1:00:00 PM,89,Kamienie milowe,,,,
+4,Implementacja projektu,,,11/5/2018 1:00:00 PM,12/3/2018 1:00:00 PM,20,,period:,11/5/2018 1:00:00 PM,#faa525,,,12/3/2018 1:00:00 PM,20,Implementacja projektu
+4,Implementacja projektu,,,,,,,symbol:,12/3/2018 1:00:00 PM,89,Kamienie milowe,,,,
+4.1,Prosty serwer REST-owy,Piotr,,11/5/2018 1:00:00 PM,11/12/2018 1:00:00 PM,5,,period:,11/5/2018 1:00:00 PM,#71548c,Zadanie dla: Piotr,,11/12/2018 1:00:00 PM,5,
+4.1,Prosty serwer REST-owy,Piotr,,,,,,symbol:,11/12/2018 1:00:00 PM,6,Zadanie krytyczne,,,,
+4.2,Podstawowy wyglad strony,Patrycja,,11/12/2018 1:00:00 PM,11/16/2018 5:00:00 PM,4.5,,period:,11/12/2018 1:00:00 PM,#fad025,Zadanie dla: Patrycja,,11/16/2018 5:00:00 PM,4.5,
+4.3,Komunikacja miedzy frontendem a serwerem,Piotr,,11/8/2018 9:00:00 AM,11/13/2018 1:00:00 PM,3.5,,period:,11/8/2018 9:00:00 AM,#71548c,Zadanie dla: Piotr,,11/13/2018 1:00:00 PM,3.5,
+4.4,Kompilacja i uruchomienie przeslanego kodu,Piotr,,11/13/2018 1:00:00 PM,11/16/2018 5:00:00 PM,3.5,,period:,11/13/2018 1:00:00 PM,#71548c,Zadanie dla: Piotr,,11/16/2018 5:00:00 PM,3.5,
+4.5,Prosty edytor (podswietlanie skladni),Patrycja,,11/19/2018 9:00:00 AM,11/22/2018 1:00:00 PM,3.5,,period:,11/19/2018 9:00:00 AM,#fad025,Zadanie dla: Patrycja,,11/22/2018 1:00:00 PM,3.5,
+4.5,Prosty edytor (podswietlanie skladni),Patrycja,,,,,,symbol:,11/22/2018 1:00:00 PM,47,Spotkanie,,,,
+4.6,Zapewnienie wielowatkowosci i sprawdzanie czasu,Piotr,,11/19/2018 9:00:00 AM,11/22/2018 1:00:00 PM,3.5,,period:,11/19/2018 9:00:00 AM,#71548c,Zadanie dla: Piotr,,11/22/2018 1:00:00 PM,3.5,
+4.7,Wyswietlanie zadan,Patrycja,,11/22/2018 1:00:00 PM,11/28/2018 1:00:00 PM,4,,period:,11/22/2018 1:00:00 PM,#fad025,Zadanie dla: Patrycja,,11/28/2018 1:00:00 PM,4,
+4.8,Stworzenie przykladowych zadan wraz z opisem,Piotr,,11/22/2018 1:00:00 PM,11/27/2018 1:00:00 PM,3,,period:,11/22/2018 1:00:00 PM,#71548c,Zadanie dla: Piotr,,11/27/2018 1:00:00 PM,3,
+4.9,Poprawki wygladu,Patrycja,,11/28/2018 1:00:00 PM,11/30/2018 5:00:00 PM,2.5,,period:,11/28/2018 1:00:00 PM,#fad025,Zadanie dla: Patrycja,,11/30/2018 5:00:00 PM,2.5,
+4.10,Zapewnienie wsparcia dla róznych jezyków,Piotr,,11/27/2018 1:00:00 PM,11/30/2018 5:00:00 PM,3.5,,period:,11/27/2018 1:00:00 PM,#71548c,Zadanie dla: Piotr,,11/30/2018 5:00:00 PM,3.5,
+5,Testy sprawdzajace,,,12/3/2018 1:00:00 PM,12/10/2018 1:00:00 PM,5,,period:,12/3/2018 1:00:00 PM,#faa525,,,12/10/2018 1:00:00 PM,5,Testy
+5,Testy sprawdzajace,,,,,,,symbol:,12/10/2018 1:00:00 PM,89,Kamienie milowe,,,,
+5.1,Testy serwera,Piotr,,12/3/2018 1:00:00 PM,12/6/2018 5:00:00 PM,3.5,,period:,12/3/2018 1:00:00 PM,#71548c,Zadanie dla: Piotr,,12/6/2018 5:00:00 PM,3.5,
+5.2,Testy frontendu,Patrycja,,12/3/2018 1:00:00 PM,12/6/2018 5:00:00 PM,3.5,,period:,12/3/2018 1:00:00 PM,#fad025,Zadanie dla: Patrycja,,12/6/2018 5:00:00 PM,3.5,
+5.3,Poprawki bledów,"Piotr, Patrycja",,12/5/2018 1:00:00 PM,12/7/2018 5:00:00 PM,2.5,,period:,12/5/2018 1:00:00 PM,#2775ac, ,,12/7/2018 5:00:00 PM,2.5,
+6,Dokumentacja,"Piotr, Patrycja",,12/10/2018 1:00:00 PM,12/17/2018 1:00:00 PM,5,,period:,12/10/2018 1:00:00 PM,#bcca26,Zadanie okoloprojektowe,,12/17/2018 1:00:00 PM,5,Dokumentacja
+6,Dokumentacja,"Piotr, Patrycja",,,,,,symbol:,12/17/2018 1:00:00 PM,89,Kamienie milowe,,,,
