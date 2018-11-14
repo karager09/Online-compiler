@@ -4,8 +4,15 @@ CodeMirror.commands.autocomplete = function(cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
 }
 
+
 $(document).ready(function(){
 
+    createEditor();
+    getListOfExercises();
+
+});
+
+function createEditor() {
     var code = $(".codemirror-textarea")[0];
     editor = CodeMirror.fromTextArea(code,{
         lineNumbers : true,
@@ -42,7 +49,8 @@ $(document).ready(function(){
 
         }
     });
-});
+}
+
 
 function selectLanguage(){
     var input = document.getElementById("selectLanguage");
@@ -133,6 +141,52 @@ function fullscreen(){
     } else {
         editor.setOption("fullScreen", true);
     }
+}
+
+
+function parseJsonWithExercisesList(returnMessage) {
+    // todo zparsuj to co dostaniesz od Piotrka jako liste
+    // todo tzn od razu wyswietl w menu w sumie
+    // dodaj gdzies przycisk zeby korzystac z czystego kompilatora a nie zadan
+}
+
+
+function parseJsonWithExercise(exercise) {
+    // todo zparsuj to co dostaniesz od Piotrka jako zadanie
+    // todo tzn od razu wywietl w sumie
+    // todo dostaniesz id, nazwa, tresc, jezyk, kod do edytora, linie nieaktywne, wskazowki
+    // todo dodaj nowy ajax() czyli zmien przycisk zeby
+    // trzeba zmienic jezyk i linie dezaktywowac
+}
+
+// on click exercise w menu
+// todo w menu po kliknieciu na zadanie pobieram dane
+function getExercise(id) {
+    var exercise = null;
+    $.ajax({
+        url: "http://localhost:8080/api/exercise/" + id ,
+        datatype: 'json',
+        type: "get"
+    }).then(function (data, status, jqxhr) {
+        exercise = data;
+    });
+
+    parseJsonWithExercise(exercise);
+
+}
+
+function getListOfExercises() {
+    var returnMessage = null;
+    $.ajax({
+        url: "http://localhost:8080/api/exercise/list",
+        datatype: 'json',
+        type: "get"
+    }).then(function (data, status, jqxhr) {
+       returnMessage = data;
+    });
+
+    parseJsonWithExercisesList(returnMessage);
+
 }
 
 function sendCode(){
