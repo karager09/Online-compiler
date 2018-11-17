@@ -86,11 +86,15 @@
     <script src="codemirror/addon/hint/show-hint.js"></script>
     <script src="codemirror/addon/hint/anyword-hint.js"></script>
     <script src="codemirror/addon/edit/closebrackets.js"></script>
+    <script src="codemirror/addon/selection/mark-selection.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!--
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+
     <link rel="Shortcut icon" href="images/icon.png" />
 
     <script type="text/javascript" src="js/basic.js"></script>
@@ -110,6 +114,8 @@
             height: auto;
             z-index: 9;
         }
+        .styled-background { background-color: #ff7; }
+
 
         .cm-trailingspace {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
@@ -142,6 +148,15 @@ int main()
     cout &lt&lt "world";
     return 0;
 }</textarea>
+
+    <div class="bs-example" data-example-id="list-group-btns" style="width:300px">
+        <div class="list-group" id="exercisesList">
+            <button type="button" class="list-group-item" onclick="clearEditor()" id="empty">Empty editor</button>
+        </div>
+    </div>
+
+
+
 
     <select onchange="selectTheme();" id="selectTheme">
         <option selected="">default</option>

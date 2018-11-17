@@ -6,10 +6,8 @@ CodeMirror.commands.autocomplete = function(cm) {
 
 
 $(document).ready(function(){
-
     createEditor();
     getListOfExercises();
-
 });
 
 function createEditor() {
@@ -41,16 +39,13 @@ function createEditor() {
     });
 
     loadTheme();
-
-    var readOnlyLines = [0,1,2,3];
-    editor.on('beforeChange',function(cm,change) {
-        if ( ~readOnlyLines.indexOf(change.from.line) ) {
-            change.cancel();
-
-        }
-    });
 }
 
+function makeReadOnly(lines) {
+    for (var i = 0; i< lines.length; i++ ){
+        editor.markText({line: i, ch: 0}, {line: i, ch: 200}, {readOnly: true, className: "styled-background"});
+    }
+}
 
 function selectLanguage(){
     var input = document.getElementById("selectLanguage");
@@ -145,48 +140,74 @@ function fullscreen(){
 
 
 function parseJsonWithExercisesList(returnMessage) {
-    // todo zparsuj to co dostaniesz od Piotrka jako liste
-    // todo tzn od razu wyswietl w menu w sumie
-    // dodaj gdzies przycisk zeby korzystac z czystego kompilatora a nie zadan
+    var list = $("#exercisesList");
+    var obj = JSON.parse(returnMessage);
+
+    for (var j=0; j< obj.length; j++){
+        var language = obj[j].language;
+
+        var button = $('<button type="button" class="list-group-item disabled">' + language + '</button>');
+        list.append(button);
+
+        var elements = obj[j].elements;
+        for (var i = 0; i< elements.length ; i++){
+            var name = elements[i].name;
+            var id = elements[i].id;
+
+            var button = $('<button type="button" class="list-group-item" onclick="getExercise('+ id +')" id="' + id +'">' + name + '</button>');
+            list.append(button);
+        }
+    }
 }
 
+function clearEditor() {
+    editor.setValue("");
+}
 
 function parseJsonWithExercise(exercise) {
-    // todo zparsuj to co dostaniesz od Piotrka jako zadanie
-    // todo tzn od razu wywietl w sumie
-    // todo dostaniesz id, nazwa, tresc, jezyk, kod do edytora, linie nieaktywne, wskazowki
-    // todo dodaj nowy ajax() czyli zmien przycisk zeby
-    // trzeba zmienic jezyk i linie dezaktywowac
+    console.log(exercise);
+
+    console.log(exercise);
+    var obj = JSON.parse(exercise);
+
+    var name = obj.name;
+    var id = obj.id;
+    var code = obj.code;
+    var inactive = obj.inactive;
+    var contents = obj.contents;
+    var hints = obj.hints;
+    var language = obj.language;
+
+
+    makeReadOnly(inactive);
+    setLanguage(language);
+    editor.setValue(code);
+
+    // todo contents trzeba pokazac w popupie oraz na stronie
+    // todo name gdzies wyswietlic
+    // todo id zapisac w jakiejs zmiennej
+    // todo hints - button do wyswietlania
+    // todo dodaj nowa fk do wyslania do kompilatora albo button czyli zmien przycisk zeby
 }
 
-// on click exercise w menu
-// todo w menu po kliknieciu na zadanie pobieram dane
 function getExercise(id) {
-    var exercise = null;
     $.ajax({
-        url: "http://localhost:8080/api/exercise/" + id ,
+        url: "http://localhost:8080/api/exercise/" + id,
         datatype: 'json',
         type: "get"
     }).then(function (data, status, jqxhr) {
-        exercise = data;
+        parseJsonWithExercise(data);
     });
-
-    parseJsonWithExercise(exercise);
-
 }
 
 function getListOfExercises() {
-    var returnMessage = null;
     $.ajax({
         url: "http://localhost:8080/api/exercise/list",
         datatype: 'json',
         type: "get"
     }).then(function (data, status, jqxhr) {
-       returnMessage = data;
+        parseJsonWithExercisesList(data);
     });
-
-    parseJsonWithExercisesList(returnMessage);
-
 }
 
 function sendCode(){
