@@ -59,8 +59,8 @@ public class RestController {
 
     }
 
-    @GetMapping("api/exercise/{id}") // todo zmien to, mi się nie chcialo bawic XD
-    public ResponseEntity getExercice(@PathVariable("id") int id) throws JSONException {
+    @GetMapping("api/exercise/1") // todo zmien to, mi się nie chcialo bawic XD
+    public ResponseEntity getExercice() throws JSONException {
         JSONArray hints = new JSONArray();
         hints.put("aaaa");
         hints.put("asdsagadhah");
@@ -72,7 +72,46 @@ public class RestController {
         exer.put("name", "reksio");
         exer.put("language", "java");
         exer.put("contents", "dsdsdgsgs");
-        exer.put("code", "dfhdfghdfh");
+        exer.put("code", "#include &ltiostream&gt\n" +
+                "using namespace std;\n" +
+                "int main()\n" +
+                "{\n" +
+                "    iaaant x;\n" +
+                "    coutvvv << \"Hello\" << endl;\n" +
+                "    cinvvv >> x;\n" +
+                "    cout vvv<< x << endl;\n" +
+                "    cout &vvddlt&lt \"world\";\n" +
+                "    returdddn 0;\n" +
+                "}");
+        exer.put("hints", hints);
+        exer.put("inactive", lines);
+        return new ResponseEntity(exer.toString(), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("api/exercise/0") // todo zmien to, mi się nie chcialo bawic XD
+    public ResponseEntity getExercice2() throws JSONException {
+        JSONArray hints = new JSONArray();
+        hints.put("aaaa");
+        hints.put("asdsagadhah");
+        JSONArray lines = new JSONArray();
+        lines.put(8);
+        lines.put(7);
+        JSONObject exer = new JSONObject();
+        exer.put("id", 0);
+        exer.put("name", "reksio");
+        exer.put("language", "java");
+        exer.put("contents", "dsdsdgsgs");
+        exer.put("code", "#include &ltiostream&gt\n" +
+                "using namespace std;\n" +
+                "int main()\n" +
+                "{\n" +
+                "    sasasasiaaant x;\n" +
+                "    asasasascoutvvv << \"Hello\" << endl;\n" +
+                "    sasassacinvvv >> x;\n" +
+                "    cout sasasavvv<< x << endl;\n" +
+                "    cout &vvddlasasat&lt \"world\";\n" +
+                "    retuasasasasasrdddn 0;\n" +
+                "}");
         exer.put("hints", hints);
         exer.put("inactive", lines);
         return new ResponseEntity(exer.toString(), HttpStatus.ACCEPTED);

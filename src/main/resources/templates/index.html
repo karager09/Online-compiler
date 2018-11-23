@@ -88,12 +88,10 @@
     <script src="codemirror/addon/edit/closebrackets.js"></script>
     <script src="codemirror/addon/selection/mark-selection.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<!--
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 
     <link rel="Shortcut icon" href="images/icon.png" />
 
@@ -135,7 +133,9 @@
 <!--    <div class="navbar navbar-expand-sm bg-light">
     </div>-->
 
-    <div class="page-header" align="center"><h1>Online compiler</h1></div>
+    <div class="page-header" align="center"><h1>Online compiler</h1>
+    <p id="compilerModeDescription">Example Code</p>
+    </div>
 
     <textarea class="codemirror-textarea" id="code">#include &ltiostream&gt
 using namespace std;
@@ -155,10 +155,7 @@ int main()
         </div>
     </div>
 
-
-
-
-    <select onchange="selectTheme();" id="selectTheme">
+    <select class="form-control" style="width:100px" onchange="selectTheme();" id="selectTheme">
         <option selected="">default</option>
         <option>3024-day</option>
         <option>3024-night</option>
@@ -216,20 +213,25 @@ int main()
         <option>zenburn</option>
     </select>
 
-    <select onchange="selectLanguage();" id="selectLanguage">
-        <option selected="">wybor</option>
-        <option>jezyka</option>
-        <option>nie wiem</option>
-        <option>jakie</option>
-        <option>beda</option>
-        <option>do wyboru</option>
-        <option>XD</option>
+    <select class="form-control" onchange="selectLanguage();" style="width:100px" id="selectLanguage">
+        <option selected="" value="cpp">Cpp</option>
+        <option value="java">Java</option>
     </select>
 
-    <button id="fullscreen" class="btn btn-primary" type="button" onclick="fullscreen();">Full screen</button>
-    <button id="saveOutputToFile" class="btn btn-primary" type="button" onclick="saveOutputToFile();">Save Output To File</button>
-    <button id="saveCodeToFile" class="btn btn-primary" type="button" onclick="saveCodeToFile();">Save Code To File</button>
-    <label class="btn btn-primary">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
+    <div class="input-group">
+        <span class="input-group-btn" style="margin: 1px"><button id="fullscreen" class="btn btn-primary" type="button" onclick="fullscreen();">Full screen</button></span>
+        <span class="input-group-btn" style="margin: 1px"><button id="saveOutputToFile" class="btn btn-primary" type="button" onclick="saveOutputToFile();">Save Output To File</button></span>
+        <span class="input-group-btn" style="margin: 1px"><button id="saveCodeToFile" class="btn btn-primary" type="button" onclick="saveCodeToFile();">Save Code To File</button></span>
+    <label class="btn btn-primary" role="button" style="margin: 1px">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
+
+        <span class="input-group-btn" style="margin: 1px"><button id="showHintButton" class="btn btn-info" type="button">Show Hint</button></span>
+
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="runCompiledProgramCheckbox">
+        <label class="form-check-label" for="runCompiledProgramCheckbox">Run Compiled Program</label>
+    </div>
 
     <div class="form-group" align="center" style="margin:auto;">
         <div class="col-12 col-sm-8 col-md-8 col-lg-8" id="main">

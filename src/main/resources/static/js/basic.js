@@ -1,4 +1,8 @@
+// todo wyswietlanie wynikow kompilacji, bledow, wyniku programu
+
+
 var editor = null;
+var taskId = -1;
 
 CodeMirror.commands.autocomplete = function(cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -43,19 +47,23 @@ function createEditor() {
 
 function makeReadOnly(lines) {
     for (var i = 0; i< lines.length; i++ ){
-        editor.markText({line: i, ch: 0}, {line: i, ch: 200}, {readOnly: true, className: "styled-background"});
+        var number = parseInt(lines[i]);
+        editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {readOnly: true, className: "styled-background"});
     }
 }
 
 function selectLanguage(){
-    var input = document.getElementById("selectLanguage");
-    // todo po zmienie zmien mode, tylko nie wiesz jakie jezyki wiec nie ma mode
-    // todo nic sie nie dzieje jeszcze XD
-    // setLanguage(language)
+    var input =  $("#selectLanguage")[0].value;
+    setLanguage(input);
 }
 
 function setLanguage(language){
-    editor.setOption("mode", language);
+    language = language.toLowerCase();
+    if (language == "java"){
+        editor.setOption("mode", "text/x-java");
+    } else if (language == "cpp"){
+        editor.setOption("mode", "text/x-c++src");
+    }
 }
 
 function uploadFile() {
@@ -80,7 +88,6 @@ function uploadFile() {
 }
 
 function saveCodeToFile() {
-    // todo you can specify filename and data type and file extension
     var text = editor.getValue();
     var filename = "code.txt";
 
@@ -95,7 +102,6 @@ function saveCodeToFile() {
 }
 
 function saveOutputToFile() {
-    // todo you can specify filename
     var text = document.getElementById('compileResponse').value;
     var filename = "output.txt";
 
@@ -130,11 +136,11 @@ function loadTheme() {
     });
 }
 function fullscreen(){
-    // todo add alert with information about closing fullscreen
     if (editor.getOption("fullScreen")) {
         editor.setOption("fullScreen", false);
     } else {
         editor.setOption("fullScreen", true);
+        alert("To close fullscreen mode click ESC");
     }
 }
 
@@ -160,16 +166,8 @@ function parseJsonWithExercisesList(returnMessage) {
     }
 }
 
-function clearEditor() {
-    editor.setValue("");
-}
-
 function parseJsonWithExercise(exercise) {
-    console.log(exercise);
-
-    console.log(exercise);
     var obj = JSON.parse(exercise);
-
     var name = obj.name;
     var id = obj.id;
     var code = obj.code;
@@ -178,17 +176,40 @@ function parseJsonWithExercise(exercise) {
     var hints = obj.hints;
     var language = obj.language;
 
-
-    makeReadOnly(inactive);
     setLanguage(language);
+    $("#selectLanguage")[0].value = language.toLowerCase();
     editor.setValue(code);
+    makeReadOnly(inactive);
 
-    // todo contents trzeba pokazac w popupie oraz na stronie
-    // todo name gdzies wyswietlic
-    // todo id zapisac w jakiejs zmiennej
-    // todo hints - button do wyswietlania
-    // todo dodaj nowa fk do wyslania do kompilatora albo button czyli zmien przycisk zeby
+    taskId = parseInt(id);
+
+    var compilerModeDescription = $("#compilerModeDescription")[0];
+    compilerModeDescription.textContent = name.toUpperCase() + " - " + contents;
+
+    alert(name + "\n" + contents);
+
+    $("#showHintButton").unbind('click');
+    $("#showHintButton").on("click", function() {
+        showHints(hints);
+    });
 }
+
+function clearEditor() {
+    editor.setValue("");
+
+    var compilerModeDescription = $("#compilerModeDescription")[0];
+    compilerModeDescription.textContent = "Editor";
+
+    taskId = -1;
+
+    $("#showHintButton").unbind('click');
+}
+
+function showHints(hints) {
+    var random =Math.floor(Math.random() * (+hints.length - +0)) + +0;
+    alert(hints[random]);
+}
+
 
 function getExercise(id) {
     $.ajax({
@@ -214,20 +235,41 @@ function sendCode(){
 
     var code = editor.getValue();
     var input = $("#input").val();
+    var runCompiledProgramCheckboxValue = $("#runCompiledProgramCheckbox")[0].checked;
+    var runCompiledProgram = (runCompiledProgramCheckboxValue == 'true');
+    var language = $("#selectLanguage")[0].value;
 
-    $.ajax({
-        url: "http://localhost:8080/api/compile/code",
-        datatype: 'json',
-        type: "post",
-        contentType: "application/json",
-        data: JSON.stringify({
-            code: code,
-            input: input,
-            language: "Cpp",
-            runCompiledProgram : false
-        })
-    }).then(function (data, status, jqxhr) {
+    if (taskId == -1) {
+        $.ajax({
+            url: "http://localhost:8080/api/compile/code",
+            datatype: 'json',
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify({
+                code: code,
+                input: input,
+                language: language,
+                runCompiledProgram : runCompiledProgram
+            })
+        }).then(function (data, status, jqxhr) {
 
-        $("#compileResponse").val('Status success, Server response: \n' + data);
-    });
+            $("#compileResponse").val('Status success, Server response: \n' + data);
+        });
+    } else {
+        $.ajax({
+            url: "http://localhost:8080/api/compile/code",
+            datatype: 'json',
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify({
+                code: code,
+                input: input,
+                language: language,
+                runCompiledProgram : runCompiledProgram,
+                exerciseId: taskId
+            })
+        }).then(function (data, status, jqxhr) {
+            $("#compileResponse").val('Status success, Server response: \n' + data);
+        });
+    }
 }
