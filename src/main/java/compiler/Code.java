@@ -141,7 +141,7 @@ public class Code {
             executor.invokeAll(Arrays.asList(readInput), Constants.MAX_DURATION_OF_RUNNING_CODE, TimeUnit.MILLISECONDS);
             executor.shutdown();
 
-            var writer = new OutputStreamWriter(p1.getOutputStream());
+            OutputStreamWriter writer = new OutputStreamWriter(p1.getOutputStream());
             writer.write(getInput());
             writer.close();
 

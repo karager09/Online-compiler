@@ -2,6 +2,8 @@ package server;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import compiler.Code;
+import files.FileManager;
+import files.TaskFile;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,15 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.xml.ws.Response;
+//import javax.xml.ws.Response;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
+
     /**
      * Obsługa wyjątków rzucanych przez metody REST
      *
-     * @return zwraca pusty model i wodok, łapany w kodzie JS
+     * @return zwraca pusty model i widok, łapany w kodzie JS
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -34,27 +37,40 @@ public class RestController {
     }
 
     @GetMapping("/api/exercise/list") // todo zmien to, mi się nie chcialo bawic XD
-    public ResponseEntity getExercicesList() throws JSONException {
+    public ResponseEntity getExercisesList() throws JSONException {
         JSONArray json = new JSONArray();
+//
+//        JSONObject language = new JSONObject();
+//        language.put("language", "cppX");
+//
+//        JSONArray array = new JSONArray();
+//        JSONObject exer = new JSONObject();
+//        exer.put("id", 0);
+//        exer.put("name", "reksio");
+//        array.put(exer);
+//
+//        JSONObject exer2 = new JSONObject();
+//        exer2.put("id", 1);
+//        exer2.put("name", "bruno");
+//        array.put(exer2);
+//
+//        language.put("elements", array);
+//        json.put(language);
 
-        JSONObject language = new JSONObject();
-        language.put("language", "java");
+        for (String language : FileManager.get().getLanguages()) {
+            JSONObject languageAndTasks = new JSONObject();
+            languageAndTasks.put("language", language);
+            JSONArray array = new JSONArray();
 
-        JSONArray array = new JSONArray();
-        JSONObject exer = new JSONObject();
-        exer.put("id", 0);
-        exer.put("name", "reksio");
-        array.put(exer);
-
-        JSONObject exer2 = new JSONObject();
-        exer2.put("id", 1);
-        exer2.put("name", "bruno");
-        array.put(exer2);
-
-        language.put("elements", array);
-
-        json.put(language);
-
+            for (TaskFile taskFile : FileManager.get().getTasksForLanguage(language)) {
+                JSONObject exer = new JSONObject();
+                System.out.println(taskFile.getId());
+                exer.put("name", taskFile.getName());
+                array.put(exer);
+            }
+            languageAndTasks.put("elements", array);
+            json.put(languageAndTasks);
+        }
         return new ResponseEntity(json.toString(), HttpStatus.ACCEPTED);
 
     }
