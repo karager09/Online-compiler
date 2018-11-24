@@ -1,7 +1,7 @@
 package server;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import compiler.Code;
+import compiler.CodeResult;
 import files.FileManager;
 import files.TaskFile;
 import org.json.JSONArray;
@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-//import javax.xml.ws.Response;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -30,32 +28,22 @@ public class RestController {
     }
 
     @PostMapping("/api/compile/code")
-    public String sayHello(@RequestBody Code receivedCode) {
-        //System.out.println(receivedCode.getCode() +", " + receivedCode.getLanguage());
-        return receivedCode.run();
-//        return "I would compile this.. the other day.";
+    public ResponseEntity sayHello(@RequestBody Code receivedCode) throws JSONException {
+        CodeResult result = receivedCode.run();
+
+        JSONObject json = new JSONObject();
+        json.put("compilationSucceeded", result.getCompilationSucceeded());
+        json.put("lineOfError", result.getLineOfError());
+        json.put("response", result.getResponse());
+        json.put("error", result.getError());
+        json.put("outputOk", result.isOutputOk());
+
+        return new ResponseEntity(json.toString(), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/api/exercise/list") // todo zmien to, mi się nie chcialo bawic XD
+    @GetMapping("/api/exercise/list")
     public ResponseEntity getExercisesList() throws JSONException {
         JSONArray json = new JSONArray();
-//
-//        JSONObject language = new JSONObject();
-//        language.put("language", "cppX");
-//
-//        JSONArray array = new JSONArray();
-//        JSONObject exer = new JSONObject();
-//        exer.put("id", 0);
-//        exer.put("name", "reksio");
-//        array.put(exer);
-//
-//        JSONObject exer2 = new JSONObject();
-//        exer2.put("id", 1);
-//        exer2.put("name", "bruno");
-//        array.put(exer2);
-//
-//        language.put("elements", array);
-//        json.put(language);
 
         for (String language : FileManager.get().getLanguages()) {
             JSONObject languageAndTasks = new JSONObject();
@@ -64,7 +52,7 @@ public class RestController {
 
             for (TaskFile taskFile : FileManager.get().getTasksForLanguage(language)) {
                 JSONObject exer = new JSONObject();
-                System.out.println(taskFile.getId());
+                exer.put("id", taskFile.getId());
                 exer.put("name", taskFile.getName());
                 array.put(exer);
             }
@@ -72,64 +60,34 @@ public class RestController {
             json.put(languageAndTasks);
         }
         return new ResponseEntity(json.toString(), HttpStatus.ACCEPTED);
-
     }
 
-    @GetMapping("api/exercise/1") // todo zmien to, mi się nie chcialo bawic XD
-    public ResponseEntity getExercice() throws JSONException {
-        JSONArray hints = new JSONArray();
-        hints.put("aaaa");
-        hints.put("asdsagadhah");
-        JSONArray lines = new JSONArray();
-        lines.put(1);
-        lines.put(4);
-        JSONObject exer = new JSONObject();
-        exer.put("id", 0);
-        exer.put("name", "reksio");
-        exer.put("language", "java");
-        exer.put("contents", "dsdsdgsgs");
-        exer.put("code", "#include &ltiostream&gt\n" +
-                "using namespace std;\n" +
-                "int main()\n" +
-                "{\n" +
-                "    iaaant x;\n" +
-                "    coutvvv << \"Hello\" << endl;\n" +
-                "    cinvvv >> x;\n" +
-                "    cout vvv<< x << endl;\n" +
-                "    cout &vvddlt&lt \"world\";\n" +
-                "    returdddn 0;\n" +
-                "}");
-        exer.put("hints", hints);
-        exer.put("inactive", lines);
-        return new ResponseEntity(exer.toString(), HttpStatus.ACCEPTED);
-    }
+    @GetMapping("api/exercise/{id}")
+    public ResponseEntity getExercise(@PathVariable("id") Integer id) throws JSONException {
+        TaskFile task = FileManager.get().getTaskById(id);
+        if (task == null) {
+            // todo co zwrócić jak podane zostało złe id?
+        }
 
-    @GetMapping("api/exercise/0") // todo zmien to, mi się nie chcialo bawic XD
-    public ResponseEntity getExercice2() throws JSONException {
         JSONArray hints = new JSONArray();
-        hints.put("aaaa");
-        hints.put("asdsagadhah");
+        if (task.getHints() != null)
+            for (String hint : task.getHints())
+                hints.put(hint);
+
         JSONArray lines = new JSONArray();
-        lines.put(8);
-        lines.put(7);
+        if (task.getLines() != null)
+            for (int line : task.getLines())
+                lines.put(line);
+
         JSONObject exer = new JSONObject();
-        exer.put("id", 0);
-        exer.put("name", "reksio");
-        exer.put("language", "java");
-        exer.put("contents", "dsdsdgsgs");
-        exer.put("code", "#include &ltiostream&gt\n" +
-                "using namespace std;\n" +
-                "int main()\n" +
-                "{\n" +
-                "    sasasasiaaant x;\n" +
-                "    asasasascoutvvv << \"Hello\" << endl;\n" +
-                "    sasassacinvvv >> x;\n" +
-                "    cout sasasavvv<< x << endl;\n" +
-                "    cout &vvddlasasat&lt \"world\";\n" +
-                "    retuasasasasasrdddn 0;\n" +
-                "}");
+        exer.put("id", task.getId());
+        exer.put("name", task.getName());
+        exer.put("language", task.getLanguage());
+        exer.put("contents", task.getContents());
+        exer.put("code", task.getCode());
         exer.put("hints", hints);
         exer.put("inactive", lines);
+
         return new ResponseEntity(exer.toString(), HttpStatus.ACCEPTED);
     }
 }

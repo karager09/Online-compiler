@@ -40,11 +40,14 @@ public class FileManager {
     }
 
     public Collection<TaskFile> getTasksForLanguage(String language){
-        System.out.println(taskFiles.get(language).values().size());
         return taskFiles.get(language).values();
     }
 
-//    public HashSet<TaskFile> getAll() {
-//        return (HashSet<TaskFile>) taskFiles.values();
-//    }
+    public TaskFile getTaskById(int id) {
+        for(HashMap<Integer, TaskFile> forLanguage: taskFiles.values()) {
+            if(forLanguage.containsKey(id))
+                return forLanguage.get(id);
+        }
+        return null;
+    }
 }

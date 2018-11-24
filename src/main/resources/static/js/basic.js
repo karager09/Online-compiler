@@ -4,35 +4,35 @@
 var editor = null;
 var taskId = -1;
 
-CodeMirror.commands.autocomplete = function(cm) {
+CodeMirror.commands.autocomplete = function (cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
 }
 
 
-$(document).ready(function(){
+$(document).ready(function () {
     createEditor();
     getListOfExercises();
 });
 
 function createEditor() {
     var code = $(".codemirror-textarea")[0];
-    editor = CodeMirror.fromTextArea(code,{
-        lineNumbers : true,
+    editor = CodeMirror.fromTextArea(code, {
+        lineNumbers: true,
         lineWrapping: true,
         addModeClass: true,
         styleActiveLine: true,
         matchBrackets: true,
-        autoCloseBrackets : true,
+        autoCloseBrackets: true,
         showTrailingSpace: true,
-        mode : "clike",
-        dragDrop : false,
-        fullScreen : false,
+        mode: "clike",
+        dragDrop: false,
+        fullScreen: false,
         highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
         extraKeys: {
-            "Esc": function(cm) {
+            "Esc": function (cm) {
                 if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
             },
-            "Ctrl-L": function(cm){
+            "Ctrl-L": function (cm) {
                 cm.foldCode(cm.getCursor());
             },
             "Alt-F": "findPersistent",
@@ -46,22 +46,25 @@ function createEditor() {
 }
 
 function makeReadOnly(lines) {
-    for (var i = 0; i< lines.length; i++ ){
+    for (var i = 0; i < lines.length; i++) {
         var number = parseInt(lines[i]);
-        editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {readOnly: true, className: "styled-background"});
+        editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {
+            readOnly: true,
+            className: "styled-background"
+        });
     }
 }
 
-function selectLanguage(){
-    var input =  $("#selectLanguage")[0].value;
+function selectLanguage() {
+    var input = $("#selectLanguage")[0].value;
     setLanguage(input);
 }
 
-function setLanguage(language){
+function setLanguage(language) {
     language = language.toLowerCase();
-    if (language == "java"){
+    if (language == "java") {
         editor.setOption("mode", "text/x-java");
-    } else if (language == "cpp"){
+    } else if (language == "cpp") {
         editor.setOption("mode", "text/x-c++src");
     }
 }
@@ -78,7 +81,7 @@ function uploadFile() {
             }
 
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 var text = reader.result;
                 editor.setValue(text);
             }
@@ -130,12 +133,16 @@ function loadTheme() {
         input.value = choice;
         editor.setOption("theme", choice);
     }
-    CodeMirror.on(window, "hashchange", function() {
+    CodeMirror.on(window, "hashchange", function () {
         var theme = location.hash.slice(1);
-        if (theme) { input.value = theme; selectTheme(); }
+        if (theme) {
+            input.value = theme;
+            selectTheme();
+        }
     });
 }
-function fullscreen(){
+
+function fullscreen() {
     if (editor.getOption("fullScreen")) {
         editor.setOption("fullScreen", false);
     } else {
@@ -149,18 +156,18 @@ function parseJsonWithExercisesList(returnMessage) {
     var list = $("#exercisesList");
     var obj = JSON.parse(returnMessage);
 
-    for (var j=0; j< obj.length; j++){
+    for (var j = 0; j < obj.length; j++) {
         var language = obj[j].language;
 
         var button = $('<button type="button" class="list-group-item disabled">' + language + '</button>');
         list.append(button);
 
         var elements = obj[j].elements;
-        for (var i = 0; i< elements.length ; i++){
+        for (var i = 0; i < elements.length; i++) {
             var name = elements[i].name;
             var id = elements[i].id;
 
-            var button = $('<button type="button" class="list-group-item" onclick="getExercise('+ id +')" id="' + id +'">' + name + '</button>');
+            var button = $('<button type="button" class="list-group-item" onclick="getExercise(' + id + ')" id="' + id + '">' + name + '</button>');
             list.append(button);
         }
     }
@@ -189,7 +196,7 @@ function parseJsonWithExercise(exercise) {
     alert(name + "\n" + contents);
 
     $("#showHintButton").unbind('click');
-    $("#showHintButton").on("click", function() {
+    $("#showHintButton").on("click", function () {
         showHints(hints);
     });
 }
@@ -206,7 +213,7 @@ function clearEditor() {
 }
 
 function showHints(hints) {
-    var random =Math.floor(Math.random() * (+hints.length - +0)) + +0;
+    var random = Math.floor(Math.random() * (+hints.length - +0)) + +0;
     alert(hints[random]);
 }
 
@@ -217,6 +224,7 @@ function getExercise(id) {
         datatype: 'json',
         type: "get"
     }).then(function (data, status, jqxhr) {
+        console.log(data)
         parseJsonWithExercise(data);
     });
 }
@@ -231,7 +239,7 @@ function getListOfExercises() {
     });
 }
 
-function sendCode(){
+function sendCode() {
 
     var code = editor.getValue();
     var input = $("#input").val();
@@ -239,37 +247,40 @@ function sendCode(){
     var runCompiledProgram = (runCompiledProgramCheckboxValue == 'true');
     var language = $("#selectLanguage")[0].value;
 
-    if (taskId == -1) {
-        $.ajax({
-            url: "http://localhost:8080/api/compile/code",
-            datatype: 'json',
-            type: "post",
-            contentType: "application/json",
-            data: JSON.stringify({
-                code: code,
-                input: input,
-                language: language,
-                runCompiledProgram : runCompiledProgram
-            })
-        }).then(function (data, status, jqxhr) {
-
-            $("#compileResponse").val('Status success, Server response: \n' + data);
-        });
-    } else {
-        $.ajax({
-            url: "http://localhost:8080/api/compile/code",
-            datatype: 'json',
-            type: "post",
-            contentType: "application/json",
-            data: JSON.stringify({
-                code: code,
-                input: input,
-                language: language,
-                runCompiledProgram : runCompiledProgram,
-                exerciseId: taskId
-            })
-        }).then(function (data, status, jqxhr) {
-            $("#compileResponse").val('Status success, Server response: \n' + data);
-        });
-    }
+    // if (taskId == -1) {
+    //     $.ajax({
+    //         url: "http://localhost:8080/api/compile/code",
+    //         datatype: 'json',
+    //         type: "post",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({
+    //             code: code,
+    //             input: input,
+    //             language: language,
+    //             runCompiledProgram : runCompiledProgram
+    //         })
+    //     }).then(function (data, status, jqxhr) {
+    //
+    //         $("#compileResponse").val('Status success, Server response: \n' + data);
+    //     });
+    // } else {
+    $.ajax({
+        url: "http://localhost:8080/api/compile/code",
+        datatype: 'json',
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify({
+            code: code,
+            input: input,
+            language: language,
+            runCompiledProgram: runCompiledProgram,
+            taskId: taskId
+        })
+    }).then(function (data, status, jqxhr) {
+        //todo zmien sobie zeby jakoś to się ładnie pokazywało :P
+        //jak cos to odejmij 1 od lini z problemem (domyślnie zaczynają się od 0)
+        var obj = JSON.parse(data);
+        $("#compileResponse").val(obj.compilationSucceeded + '\n' + obj.lineOfError + '\n' + obj.outputOk + '\n' + obj.response + '\n' + obj.error);
+    });
+    // }
 }

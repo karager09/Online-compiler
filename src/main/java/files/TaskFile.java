@@ -5,14 +5,27 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 
+/**
+ * Fields in files are separated by "#####"
+ * Order:
+ * -id
+ * -name
+ * -language
+ * -contents
+ * -code
+ * -output
+ * -lines (in one field separated by new line)
+ * -hints (can be few fields)
+ */
 public class TaskFile {
     private int id;
     private String name;
     private String language;
     private String contents;
     private String code;
-    private LinkedList<String> hints = new LinkedList<>();
+    private String output;
     private LinkedList<Integer> lines = new LinkedList<>();
+    private LinkedList<String> hints = new LinkedList<>();
 
     TaskFile(File file) {
         if (file.canRead()) {
@@ -25,12 +38,15 @@ public class TaskFile {
                 language = splittedContent[2].trim();
                 contents = splittedContent[3].trim();
                 code = splittedContent[4].trim();
-                for (int i = 5; i < splittedContent.length - 1; i++) {
-                    hints.add(splittedContent[i].trim());
-                }
+                output = splittedContent[5].trim();
+                if (splittedContent.length > 6)
+                    for (String noEditableLine : splittedContent[6].trim().split("\n")) {
+                        if (!noEditableLine.equals(""))
+                            lines.add(Integer.parseInt(noEditableLine.trim()));
+                    }
 
-                for (String noEditableLine : splittedContent[splittedContent.length - 1].trim().split("\n")) {
-                    lines.add(Integer.parseInt(noEditableLine.trim()));
+                for (int i = 7; i < splittedContent.length; i++) {
+                    hints.add(splittedContent[i].trim());
                 }
 
             } catch (Exception e) {
@@ -40,7 +56,6 @@ public class TaskFile {
         } else {
             System.out.println("Cannot read file " + file.getPath());
         }
-
     }
 
 
@@ -70,5 +85,9 @@ public class TaskFile {
 
     public LinkedList<Integer> getLines() {
         return lines;
+    }
+
+    public String getOutput() {
+        return output;
     }
 }
