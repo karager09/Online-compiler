@@ -1,0 +1,18 @@
+0
+#####
+Hello world CPP
+#####
+cpp
+#####
+Simple program to demonstrate how CPP looks.
+#####
+#include <iostream>
+
+int main()
+{
+    std::cout << "Hello, World!";
+    return 0;
+}
+#####
+#####
+#####

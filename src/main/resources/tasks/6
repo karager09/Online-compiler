@@ -1,0 +1,25 @@
+6
+#####
+Nazwa tcl
+#####
+tcl
+#####
+Simple program in tcl
+#####
+set lista [list raz dwa trzy]
+set concated {}
+foreach {i} $lista {
+	set concated "$concated$i"
+}
+puts $concated
+#####
+razdwatrzy
+#####
+0
+1
+#####
+"puts" is used to print some line.
+#####
+"set" is a function used to execute attribution
+#####
+brackets "[]" is used to execute command within
