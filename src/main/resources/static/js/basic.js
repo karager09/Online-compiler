@@ -1,8 +1,10 @@
 // todo wyswietlanie wynikow kompilacji, bledow, wyniku programu
-
+// todo wyswietl a stronie obency jezyk i czy ma edytro czy zadanie, jak zadanie to zadanie
+// todo zwieksz edytor a pomniejsz i poloz na dole wpisywanie inputu i response
 
 var editor = null;
 var taskId = -1;
+var lang = "cpp";
 
 CodeMirror.commands.autocomplete = function (cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -42,6 +44,7 @@ function createEditor() {
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
+    selectLanguage("cpp");
     loadTheme();
 }
 
@@ -55,9 +58,9 @@ function makeReadOnly(lines) {
     }
 }
 
-function selectLanguage() {
-    var input = $("#selectLanguage")[0].value;
-    setLanguage(input);
+function selectLanguage(language) {
+    lang = language;
+    setLanguage(language);
 }
 
 function setLanguage(language) {
@@ -66,6 +69,8 @@ function setLanguage(language) {
         editor.setOption("mode", "text/x-java");
     } else if (language == "cpp") {
         editor.setOption("mode", "text/x-c++src");
+    } else if (language == "tcl") {
+        editor.setOption("mode", "text/x-tcl");
     }
 }
 
@@ -118,26 +123,21 @@ function saveOutputToFile() {
     document.body.removeChild(element);
 }
 
-function selectTheme() {
-    var input = document.getElementById("selectTheme");
-    var theme = input.options[input.selectedIndex].textContent;
+function selectTheme(theme) {
     editor.setOption("theme", theme);
     location.hash = "#" + theme;
 }
 
 function loadTheme() {
     var choice = (location.hash && location.hash.slice(1)) || (document.location.search && decodeURIComponent(document.location.search.slice(1)));
-    var input = document.getElementById("selectTheme");
 
     if (choice) {
-        input.value = choice;
         editor.setOption("theme", choice);
     }
     CodeMirror.on(window, "hashchange", function () {
         var theme = location.hash.slice(1);
         if (theme) {
-            input.value = theme;
-            selectTheme();
+            selectTheme(theme);
         }
     });
 }
@@ -159,17 +159,22 @@ function parseJsonWithExercisesList(returnMessage) {
     for (var j = 0; j < obj.length; j++) {
         var language = obj[j].language;
 
-        var button = $('<button type="button" class="list-group-item disabled">' + language + '</button>');
-        list.append(button);
+        var hrefName = language + "submenu";
+        var aElem = $('<a href="#'+ hrefName +'" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">' + language + '</a>');
+        var ulElem = $('<ul class="collapse list-unstyled" id="' + hrefName + '">');
 
         var elements = obj[j].elements;
         for (var i = 0; i < elements.length; i++) {
             var name = elements[i].name;
             var id = elements[i].id;
 
-            var button = $('<button type="button" class="list-group-item" onclick="getExercise(' + id + ')" id="' + id + '">' + name + '</button>');
-            list.append(button);
+            var liElem = $('<li></lo><a href="#" onclick="getExercise(' + id + ')" id="' + id + '">' + name + '</a></li>');
+            ulElem.append(liElem);
+
         }
+
+        list.append(aElem);
+        list.append(ulElem);
     }
 }
 
@@ -184,7 +189,6 @@ function parseJsonWithExercise(exercise) {
     var language = obj.language;
 
     setLanguage(language);
-    $("#selectLanguage")[0].value = language.toLowerCase();
     editor.setValue(code);
     makeReadOnly(inactive);
 
@@ -224,7 +228,6 @@ function getExercise(id) {
         datatype: 'json',
         type: "get"
     }).then(function (data, status, jqxhr) {
-        console.log(data)
         parseJsonWithExercise(data);
     });
 }
@@ -243,9 +246,7 @@ function sendCode() {
 
     var code = editor.getValue();
     var input = $("#input").val();
-    var runCompiledProgramCheckboxValue = $("#runCompiledProgramCheckbox")[0].checked;
-    var runCompiledProgram = (runCompiledProgramCheckboxValue == 'true');
-    var language = $("#selectLanguage")[0].value;
+    var language = lang;
 
     // if (taskId == -1) {
     //     $.ajax({
@@ -273,7 +274,7 @@ function sendCode() {
             code: code,
             input: input,
             language: language,
-            runCompiledProgram: runCompiledProgram,
+            runCompiledProgram: false,
             taskId: taskId
         })
     }).then(function (data, status, jqxhr) {

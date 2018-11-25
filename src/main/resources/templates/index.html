@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="codemirror/addon/display/fullscreen.css"/>
     <script rel="stylesheet" src="codemirror/lib/codemirror.js"></script>
     <script rel="stylesheet" src="codemirror/mode/clike/clike.js"></script>
+    <script rel="stylesheet" src="codemirror/mode/tcl/tcl.js"></script>
     <script src="codemirror/addon/selection/active-line.js"></script>
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/addon/edit/trailingspace.js"></script>
@@ -93,6 +94,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <link rel="Shortcut icon" href="images/icon.png" />
 
     <script type="text/javascript" src="js/basic.js"></script>
@@ -124,17 +128,160 @@
         input[type="file"] {
             display: none;
         }
+
+
+        #mainText{
+            padding: 6px 6px 6px 32px;
+            text-decoration: dotted;
+            font-size: 20px;
+            color: darkred;
+            display: block;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: mintcream;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 15px;
+            color: #818181;
+            display: block;
+            font-weight: bold;
+        }
+
+        .sidenav li {
+            padding: 8px 6px 6px 32px;
+        }
+
+        .sidenav a:hover {
+            color: #2b3e50;
+        }
+
+        #inputLabel{
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 15px;
+            color: #818181;
+            display: block;
+        }
+
+        #inputLabel:hover{
+            color: #2b3e50;
+        }
+
+        #mainDiv {
+            margin-left: 200px; /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+            .sidenav a {font-size: 18px;}
+        }
+
     </style>
 
 </head>
 <body>
-<div class="container">
+<div class="container" id="mainDiv">
 
-<!--    <div class="navbar navbar-expand-sm bg-light">
-    </div>-->
+    <div class="sidenav">
+        <span class="" id="mainText">Online compiler</span>
 
-    <div class="page-header" align="center"><h1>Online compiler</h1>
-    <p id="compilerModeDescription">Example Code</p>
+        <a href="#" id="fullscreen" onclick="fullscreen();">Full screen</a>
+        <a href="#" id="saveOutputToFile" onclick="saveOutputToFile();">Save Output To File</a>
+        <a href="#" id="saveCodeToFile" onclick="saveCodeToFile();">Save Code To File</a>
+        <label id="inputLabel">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
+        <a href="#" id="showHintButton">Show Hint</a>
+
+
+        <a href="#selectLanguage" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >Languages</a>
+        <ul class="collapse list-unstyled" id="selectLanguage">
+            <li>
+                <a href="#" onclick="selectLanguage('cpp')">Cpp</a>
+            </li>
+            <li>
+                <a href="#" onclick="selectLanguage('tcl')">TCL</a>
+            </li>
+        </ul>
+
+
+        <a href="#selectTheme" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Themes</a>
+        <ul class="collapse list-unstyled" id="selectTheme">
+            <li><a href="#" onclick="selectTheme('default');">default</a></li>
+            <li><a href="#" onclick="selectTheme('3024-day');">3024-day</a></li>
+            <li><a href="#" onclick="selectTheme('3024-night');">3024-night</a></li>
+            <li><a href="#" onclick="selectTheme('abcdef');">abcdef</a></li>
+            <li><a href="#" onclick="selectTheme('ambiance');">ambiance</a></li>
+            <li><a href="#" onclick="selectTheme('base16-dark');">base16-dark</a></li>
+            <li><a href="#" onclick="selectTheme('base16-light');">base16-light</a></li>
+            <li><a href="#" onclick="selectTheme('bespin');">bespin</a></li>
+            <li><a href="#" onclick="selectTheme('blackboard');">blackboard</a></li>
+            <li><a href="#" onclick="selectTheme('cobalt');">cobalt</a></li>
+            <li><a href="#" onclick="selectTheme('colorforth');">colorforth</a></li>
+            <li><a href="#" onclick="selectTheme('darcula');">darcula</a></li>
+            <li><a href="#" onclick="selectTheme('dracula');">dracula</a></li>
+            <li><a href="#" onclick="selectTheme('duotone-dark');">duotone-dark</a></li>
+            <li><a href="#" onclick="selectTheme('duotone-light');">duotone-light</a></li>
+            <li><a href="#" onclick="selectTheme('eclipse');">eclipse</a></li>
+            <li><a href="#" onclick="selectTheme('elegant');">elegant</a></li>
+            <li><a href="#" onclick="selectTheme('erlang-dark');">erlang-dark</a></li>
+            <li><a href="#" onclick="selectTheme('gruvbox-dark');">gruvbox-dark</a></li>
+            <li><a href="#" onclick="selectTheme('hopscotch');">hopscotch</a></li>
+            <li><a href="#" onclick="selectTheme('icecoder');">icecoder</a></li>
+            <li><a href="#" onclick="selectTheme('idea');">idea</a></li>
+            <li><a href="#" onclick="selectTheme('isotope');">isotope</a></li>
+            <li><a href="#" onclick="selectTheme('lesser-dark');">lesser-dark</a></li>
+            <li><a href="#" onclick="selectTheme('liquibyte');">liquibyte</a></li>
+            <li><a href="#" onclick="selectTheme('lucario');">lucario</a></li>
+            <li><a href="#" onclick="selectTheme('material');">material</a></li>
+            <li><a href="#" onclick="selectTheme('mbo');">mbo</a></li>
+            <li><a href="#" onclick="selectTheme('mdn-like');">mdn-like</a></li>
+            <li><a href="#" onclick="selectTheme('midnight');">midnight</a></li>
+            <li><a href="#" onclick="selectTheme('monokai');">monokai</a></li>
+            <li><a href="#" onclick="selectTheme('neat');">neat</a></li>
+            <li><a href="#" onclick="selectTheme('neo');">neo</a></li>
+            <li><a href="#" onclick="selectTheme('night');">night</a></li>
+            <li><a href="#" onclick="selectTheme('oceanic-next');">oceanic-next</a></li>
+            <li><a href="#" onclick="selectTheme('panda-syntax');">panda-syntax</a></li>
+            <li><a href="#" onclick="selectTheme('paraiso-dark');">paraiso-dark</a></li>
+            <li><a href="#" onclick="selectTheme('paraiso-light');">paraiso-light</a></li>
+            <li><a href="#" onclick="selectTheme('pastel-on-dark');">pastel-on-dark</a></li>
+            <li><a href="#" onclick="selectTheme('railscasts');">railscasts</a></li>
+            <li><a href="#" onclick="selectTheme('rubyblue');">rubyblue</a></li>
+            <li><a href="#" onclick="selectTheme('seti');">seti</a></li>
+            <li><a href="#" onclick="selectTheme('shadowfox');">shadowfox</a></li>
+            <li><a href="#" onclick="selectTheme('solarized dark');">solarized dark</a></li>
+            <li><a href="#" onclick="selectTheme('solarized light');">solarized light</a></li>
+            <li><a href="#" onclick="selectTheme('the-matrix');">the-matrix</a></li>
+            <li><a href="#" onclick="selectTheme('tomorrow-night-bright');">tomorrow-night-bright</a></li>
+            <li><a href="#" onclick="selectTheme('tomorrow-night-eighties');">tomorrow-night-eighties</a></li>
+            <li><a href="#" onclick="selectTheme('ttcn');">ttcn</a></li>
+            <li><a href="#" onclick="selectTheme('twilight');">twilight</a></li>
+            <li><a href="#" onclick="selectTheme('vibrant-ink');">vibrant-ink</a></li>
+            <li><a href="#" onclick="selectTheme('xq-dark');">xq-dark</a></li>
+            <li><a href="#" onclick="selectTheme('xq-light');">xq-light</a></li>
+            <li><a href="#" onclick="selectTheme('yeti');">yeti</a></li>
+            <li><a href="#" onclick="selectTheme('zenburn');">zenburn</a></li>
+        </ul>
+
+        <li class="nav-divider"></li>
+
+        <a href="#" onclick="clearEditor()" id="empty">Empty editor</a>
+
+        <div id="exercisesList">
+        </div>
+
+
     </div>
 
     <textarea class="codemirror-textarea" id="code">#include &ltiostream&gt
@@ -149,89 +296,7 @@ int main()
     return 0;
 }</textarea>
 
-    <div class="bs-example" data-example-id="list-group-btns" style="width:300px">
-        <div class="list-group" id="exercisesList">
-            <button type="button" class="list-group-item" onclick="clearEditor()" id="empty">Empty editor</button>
-        </div>
-    </div>
-
-    <select class="form-control" style="width:100px" onchange="selectTheme();" id="selectTheme">
-        <option selected="">default</option>
-        <option>3024-day</option>
-        <option>3024-night</option>
-        <option>abcdef</option>
-        <option>ambiance</option>
-        <option>base16-dark</option>
-        <option>base16-light</option>
-        <option>bespin</option>
-        <option>blackboard</option>
-        <option>cobalt</option>
-        <option>colorforth</option>
-        <option>darcula</option>
-        <option>dracula</option>
-        <option>duotone-dark</option>
-        <option>duotone-light</option>
-        <option>eclipse</option>
-        <option>elegant</option>
-        <option>erlang-dark</option>
-        <option>gruvbox-dark</option>
-        <option>hopscotch</option>
-        <option>icecoder</option>
-        <option>idea</option>
-        <option>isotope</option>
-        <option>lesser-dark</option>
-        <option>liquibyte</option>
-        <option>lucario</option>
-        <option>material</option>
-        <option>mbo</option>
-        <option>mdn-like</option>
-        <option>midnight</option>
-        <option>monokai</option>
-        <option>neat</option>
-        <option>neo</option>
-        <option>night</option>
-        <option>oceanic-next</option>
-        <option>panda-syntax</option>
-        <option>paraiso-dark</option>
-        <option>paraiso-light</option>
-        <option>pastel-on-dark</option>
-        <option>railscasts</option>
-        <option>rubyblue</option>
-        <option>seti</option>
-        <option>shadowfox</option>
-        <option>solarized dark</option>
-        <option>solarized light</option>
-        <option>the-matrix</option>
-        <option>tomorrow-night-bright</option>
-        <option>tomorrow-night-eighties</option>
-        <option>ttcn</option>
-        <option>twilight</option>
-        <option>vibrant-ink</option>
-        <option>xq-dark</option>
-        <option>xq-light</option>
-        <option>yeti</option>
-        <option>zenburn</option>
-    </select>
-
-    <select class="form-control" onchange="selectLanguage();" style="width:100px" id="selectLanguage">
-        <option selected="" value="cpp">Cpp</option>
-        <option value="tcl">TCL</option>
-    </select>
-
-    <div class="input-group">
-        <span class="input-group-btn" style="margin: 1px"><button id="fullscreen" class="btn btn-primary" type="button" onclick="fullscreen();">Full screen</button></span>
-        <span class="input-group-btn" style="margin: 1px"><button id="saveOutputToFile" class="btn btn-primary" type="button" onclick="saveOutputToFile();">Save Output To File</button></span>
-        <span class="input-group-btn" style="margin: 1px"><button id="saveCodeToFile" class="btn btn-primary" type="button" onclick="saveCodeToFile();">Save Code To File</button></span>
-    <label class="btn btn-primary" role="button" style="margin: 1px">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
-
-        <span class="input-group-btn" style="margin: 1px"><button id="showHintButton" class="btn btn-info" type="button">Show Hint</button></span>
-
-    </div>
-
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="runCompiledProgramCheckbox">
-        <label class="form-check-label" for="runCompiledProgramCheckbox">Run Compiled Program</label>
-    </div>
+    <p id="compilerModeDescription">Example Code</p>
 
     <div class="form-group" align="center" style="margin:auto;">
         <div class="col-12 col-sm-8 col-md-8 col-lg-8" id="main">
