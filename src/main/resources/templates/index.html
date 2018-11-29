@@ -117,7 +117,7 @@
             z-index: 9;
         }
         .styled-background { background-color: #ff7; }
-
+        .styled-background-error {background-color: red;}
 
         .cm-trailingspace {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
@@ -133,8 +133,8 @@
         #mainText{
             padding: 6px 6px 6px 32px;
             text-decoration: dotted;
-            font-size: 20px;
-            color: darkred;
+            font-size: 30px;
+            color: #5FB3B3;
             display: block;
         }
 
@@ -188,15 +188,25 @@
             .sidenav a {font-size: 18px;}
         }
 
+        #send{
+            background-color: #5FB3B3;
+            color: black;
+        }
+        .codemirror-textarea {
+            height: 100vh;
+            overflow: auto;
+        }
+
     </style>
 
 </head>
-<body>
+<body onresize="setSizingOfEditorOnChange()" >
 <div class="container" id="mainDiv">
 
     <div class="sidenav">
         <span class="" id="mainText">Online compiler</span>
 
+        <a href="#" id="send" onclick="sendCode();" style="">Compile and run</a>
         <a href="#" id="fullscreen" onclick="fullscreen();">Full screen</a>
         <a href="#" id="saveOutputToFile" onclick="saveOutputToFile();">Save Output To File</a>
         <a href="#" id="saveCodeToFile" onclick="saveCodeToFile();">Save Code To File</a>
@@ -284,6 +294,7 @@
 
     </div>
 
+    <div class="code-editor">
     <textarea class="codemirror-textarea" id="code">#include &ltiostream&gt
 using namespace std;
 int main()
@@ -296,24 +307,27 @@ int main()
     return 0;
 }</textarea>
 
-    <p id="compilerModeDescription">Example Code</p>
-
-    <div class="form-group" align="center" style="margin:auto;">
-        <div class="col-12 col-sm-8 col-md-8 col-lg-8" id="main">
-            <label for="code">Write some code:</label>
-
-            <label for="input">Write some input to your code:</label>
-            <textarea rows="4" cols="60" class="form-control" id="input"></textarea>
-
-            <br>
-            <button id="send" class="btn btn-primary" type="button" onclick="sendCode();">Compile and run</button>
-            <br>
-            <br>
-            <label for="compileResponse">Response:</label>
-            <textarea rows="7" cols="200" class="form-control" id="compileResponse"></textarea>
-            <br>
-        </div>
     </div>
+
+    <div style="height: 225px" id="divWithTextAreas">
+        <p id="compilerModeDescription" style="color: #5FB3B3; font-size: large;">Current editor mode: Example Code</p>
+        <p id="hintP" style="color: #2E8B57; font-size: large;"></p>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <label for="input">Write some input to your code:</label>
+                    <textarea rows="4"  class="form-control" id="input"></textarea>
+                </div>
+                <div class="col-sm">
+                    <label for="compileResponse">Response:</label>
+                    <textarea rows="4" class="form-control" id="compileResponse"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
 </div>
 </body>
 </html>

@@ -1,7 +1,4 @@
 // todo wyswietlanie wynikow kompilacji, bledow, wyniku programu
-// todo wyswietl a stronie obency jezyk i czy ma edytro czy zadanie, jak zadanie to zadanie
-// todo zwieksz edytor a pomniejsz i poloz na dole wpisywanie inputu i response
-
 var editor = null;
 var taskId = -1;
 var lang = "cpp";
@@ -46,6 +43,17 @@ function createEditor() {
 
     selectLanguage("cpp");
     loadTheme();
+
+    setSizingOfEditorOnChange();
+}
+
+function setSizingOfEditorOnChange() {
+    var height = $(window).height() - 225;
+    var width = $(window).width() - 200;
+    editor.setSize(width, height);
+    $("#divWithTextAreas")[0].style.width = width + "px";
+    $("#input")[0].style.width = width / 3 +"px";
+    $("#compileResponse")[0].style.width = width / 3+"px";
 }
 
 function makeReadOnly(lines) {
@@ -195,9 +203,10 @@ function parseJsonWithExercise(exercise) {
     taskId = parseInt(id);
 
     var compilerModeDescription = $("#compilerModeDescription")[0];
-    compilerModeDescription.textContent = name.toUpperCase() + " - " + contents;
+    compilerModeDescription.textContent = "Current editor mode: Exercise - " + name.toUpperCase() + " - " + contents;
 
-    alert(name + "\n" + contents);
+    var hint = $("#hintP")[0];
+    hint.textContent = "";
 
     $("#showHintButton").unbind('click');
     $("#showHintButton").on("click", function () {
@@ -206,10 +215,12 @@ function parseJsonWithExercise(exercise) {
 }
 
 function clearEditor() {
+    var hint = $("#hintP")[0];
+    hint.textContent = "";
     editor.setValue("");
 
     var compilerModeDescription = $("#compilerModeDescription")[0];
-    compilerModeDescription.textContent = "Editor";
+    compilerModeDescription.textContent = "Current editor mode: Editor";
 
     taskId = -1;
 
@@ -218,7 +229,12 @@ function clearEditor() {
 
 function showHints(hints) {
     var random = Math.floor(Math.random() * (+hints.length - +0)) + +0;
-    alert(hints[random]);
+    var hint = $("#hintP")[0];
+    if (hints.length == 0){
+        hint.textContent = "NO HINTS";
+    } else {
+        hint.textContent = "HINT: " + hints[random];
+    }
 }
 
 
@@ -247,24 +263,7 @@ function sendCode() {
     var code = editor.getValue();
     var input = $("#input").val();
     var language = lang;
-
-    // if (taskId == -1) {
-    //     $.ajax({
-    //         url: "http://localhost:8080/api/compile/code",
-    //         datatype: 'json',
-    //         type: "post",
-    //         contentType: "application/json",
-    //         data: JSON.stringify({
-    //             code: code,
-    //             input: input,
-    //             language: language,
-    //             runCompiledProgram : runCompiledProgram
-    //         })
-    //     }).then(function (data, status, jqxhr) {
-    //
-    //         $("#compileResponse").val('Status success, Server response: \n' + data);
-    //     });
-    // } else {
+    console.log(taskId);
     $.ajax({
         url: "http://localhost:8080/api/compile/code",
         datatype: 'json',
@@ -278,10 +277,31 @@ function sendCode() {
             taskId: taskId
         })
     }).then(function (data, status, jqxhr) {
-        //todo zmien sobie zeby jakoś to się ładnie pokazywało :P
         //jak cos to odejmij 1 od lini z problemem (domyślnie zaczynają się od 0)
         var obj = JSON.parse(data);
-        $("#compileResponse").val(obj.compilationSucceeded + '\n' + obj.lineOfError + '\n' + obj.outputOk + '\n' + obj.response + '\n' + obj.error);
+        //$("#compileResponse").val(obj.compilationSucceeded + '    \n' + obj.lineOfError + '\n' + obj.outputOk + '\n' + obj.response + '\n' + obj.error);
+        parseOutput(obj.compilationSucceeded, obj.lineOfError, obj.outputOk, obj.response, obj.error);
     });
-    // }
+
+
+}
+
+function parseOutput(compilationSucceeded, lineOfError, outputOk, response, error) {
+    var compileSuccess = "Compilation Succeeded: " + compilationSucceeded;
+    var responseVal = "Response: " + response;
+    var errorVal = "Error: " + error;
+    var outputOkVal = "OutputOK?: " + outputOk;
+
+    $("#compileResponse").val(compileSuccess + "\n" + responseVal + "\n" + errorVal + "\n" + outputOkVal);
+
+    if (lineOfError != -1){
+        showLineWithError(lineOfError);
+    }
+}
+
+function showLineWithError(line) {
+    var number = parseInt(line-1);
+    editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {
+        className: "styled-background-error"
+    });
 }
