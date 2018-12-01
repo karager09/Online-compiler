@@ -1,12 +1,11 @@
-// todo wyswietlanie wynikow kompilacji, bledow, wyniku programu
 var editor = null;
 var taskId = -1;
 var lang = "cpp";
+var hintIter = 0;
 
 CodeMirror.commands.autocomplete = function (cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
 }
-
 
 $(document).ready(function () {
     createEditor();
@@ -165,7 +164,7 @@ function parseJsonWithExercisesList(returnMessage) {
         var language = obj[j].language;
 
         var hrefName = language + "submenu";
-        var aElem = $('<a href="#'+ hrefName +'" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">' + language + '</a>');
+        var aElem = $('<a href="#'+ hrefName +'" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">' + language.toUpperCase() + '</a>');
         var ulElem = $('<ul class="collapse list-unstyled" id="' + hrefName + '">');
 
         var elements = obj[j].elements;
@@ -202,18 +201,17 @@ function parseJsonWithExercise(exercise) {
     var compilerModeDescription = $("#compilerModeDescription")[0];
     compilerModeDescription.textContent = "Current editor mode: Exercise - " + name.toUpperCase() + " - " + contents;
 
-    var hint = $("#hintP")[0];
-    hint.textContent = "";
-
+    hintIter = 0;
     $("#showHintButton").unbind('click');
     $("#showHintButton").on("click", function () {
         showHints(hints);
     });
+
+    $("#labelWithResponse")[0].style.color = "black";
+    $("#compileResponse")[0].style.backgroundColor = "white";
 }
 
 function clearEditor() {
-    var hint = $("#hintP")[0];
-    hint.textContent = "";
     editor.setValue("");
 
     var compilerModeDescription = $("#compilerModeDescription")[0];
@@ -222,11 +220,12 @@ function clearEditor() {
     taskId = -1;
 
     $("#showHintButton").unbind('click');
+
+    $("#labelWithResponse")[0].style.color = "black";
+    $("#compileResponse")[0].style.backgroundColor = "white";
 }
 
 function showHints(hints) {
-    var random = Math.floor(Math.random() * (+hints.length - +0)) + +0;
-    //var hint = $("#hintP")[0];
     if (hints.length == 0){
         swal({
             title: "HINT!",
@@ -234,11 +233,16 @@ function showHints(hints) {
             imageUrl: 'images/hint.png'
         });
     } else {
+        var hint = hints[hintIter];
         swal({
-            title: "HINT!",
-            text: hints[random],
+            title: "HINT!" + "(" + (hintIter+1) + "/" + hints.length + ")",
+            text: hint,
             imageUrl: 'images/hint.png'
         });
+        hintIter += 1;
+        if (hintIter == hints.length){
+            hintIter = 0;
+        }
     }
 }
 
@@ -281,9 +285,7 @@ function sendCode() {
             taskId: taskId
         })
     }).then(function (data, status, jqxhr) {
-        //jak cos to odejmij 1 od lini z problemem (domyślnie zaczynają się od 0)
         var obj = JSON.parse(data);
-        //$("#compileResponse").val(obj.compilationSucceeded + '    \n' + obj.lineOfError + '\n' + obj.outputOk + '\n' + obj.response + '\n' + obj.error);
         parseOutput(obj.compilationSucceeded, obj.lineOfError, obj.outputOk, obj.response, obj.error);
     });
 
@@ -291,31 +293,38 @@ function sendCode() {
 }
 
 function parseOutput(compilationSucceeded, lineOfError, outputOk, response, error) {
-    var compileSuccess = "Compilation Succeeded: " + compilationSucceeded;
     var text = "";
     if (compilationSucceeded == false){
-        text = "Error: " + error;
-
+        text = error;
         if (lineOfError != -1){
             showLineWithError(lineOfError);
         }
-
         $("#compileResponse")[0].style.backgroundColor = "#ffcccc";
         $("#labelWithResponse")[0].style.color = "red";
     } else {
-        var outputOkVal = "Output: " + outputOk
-        text = "Response: " + response + "\n" + outputOkVal;
-        $("#labelWithResponse")[0].style.color = "black";
-        $("#compileResponse")[0].style.backgroundColor = "white";
+        var outputOkVal = "Output: " + outputOk;
+        text = response;
+        $("#labelWithResponse")[0].style.color = "green";
+        $("#compileResponse")[0].style.backgroundColor = "#d9ffcc";
     }
 
-    $("#compileResponse").val(compileSuccess + "\n" + text);
+    if (outputOkVal == false){
+        swal("Sorry!", "The returned value is not the expected one", "error");
+    } else if (outputOkVal == true){
+        swal("Good job!", "Success!", "success");
+    }
+
+    $("#compileResponse").val(text);
 }
 
 function showLineWithError(line) {
     var number = parseInt(line-1);
     editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {
         className: "styled-background-error"
+    });
+
+    editor.on("mousedown", function(editor, e) {
+        $(".styled-background-error").removeClass("styled-background-error");
     });
 }
 

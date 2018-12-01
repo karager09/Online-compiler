@@ -119,7 +119,7 @@
             z-index: 9;
         }
         .styled-background { background-color: #ff7; }
-        .styled-background-error {background-color: red;}
+        .styled-background-error {background-color: #ff6666;}
 
         .cm-trailingspace {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
@@ -212,7 +212,7 @@
         <a href="#" id="saveOutputToFile" onclick="saveOutputToFile();">Save Output To File</a>
         <a href="#" id="saveCodeToFile" onclick="saveCodeToFile();">Save Code To File</a>
         <label id="inputLabel">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
-        <a href="#" id="showHintButton">Show Hint</a>
+        <a href="#" id="showHintButton" onclick="showHints([])" n>Show Hint</a>
 
 
         <a href="#selectLanguage" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >Languages</a>
@@ -315,7 +315,6 @@ int main()
             <p id="compilerModeDescription" style="color: #5FB3B3; font-size: large; padding-top: 10px; margin-left: 15px">  Current editor mode: Example Code</p>
         </div>
 
-        <p id="hintP" style="color: #2E8B57; font-size: large;"></p>
         <div class="container">
             <div class="row">
                 <div class="col-sm">
