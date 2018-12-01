@@ -41,7 +41,7 @@ function createEditor() {
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
-    selectLanguage("cpp");
+    setLanguage("cpp");
     loadTheme();
 
     setSizingOfEditorOnChange();
@@ -49,7 +49,7 @@ function createEditor() {
 
 function setSizingOfEditorOnChange() {
     var height = $(window).height() - 225;
-    var width = $(window).width() - 200;
+    var width = $(window).width() - 225;
     editor.setSize(width, height);
     $("#divWithTextAreas")[0].style.width = width + "px";
     $("#input")[0].style.width = width / 3 +"px";
@@ -66,13 +66,11 @@ function makeReadOnly(lines) {
     }
 }
 
-function selectLanguage(language) {
-    lang = language;
-    setLanguage(language);
-}
 
-function setLanguage(language) {
-    language = language.toLowerCase();
+function setLanguage(selectedLanguage) {
+    language = selectedLanguage.toLowerCase();
+    lang = language;
+    $("#currentLanguage")[0].textContent = lang.toUpperCase();
     if (language == "java") {
         editor.setOption("mode", "text/x-java");
     } else if (language == "cpp") {
@@ -155,7 +153,6 @@ function fullscreen() {
         editor.setOption("fullScreen", false);
     } else {
         editor.setOption("fullScreen", true);
-        alert("To close fullscreen mode click ESC");
     }
 }
 
@@ -229,11 +226,19 @@ function clearEditor() {
 
 function showHints(hints) {
     var random = Math.floor(Math.random() * (+hints.length - +0)) + +0;
-    var hint = $("#hintP")[0];
+    //var hint = $("#hintP")[0];
     if (hints.length == 0){
-        hint.textContent = "NO HINTS";
+        swal({
+            title: "HINT!",
+            text: "Unfortunately there is no hints",
+            imageUrl: 'images/hint.png'
+        });
     } else {
-        hint.textContent = "HINT: " + hints[random];
+        swal({
+            title: "HINT!",
+            text: hints[random],
+            imageUrl: 'images/hint.png'
+        });
     }
 }
 
@@ -263,7 +268,6 @@ function sendCode() {
     var code = editor.getValue();
     var input = $("#input").val();
     var language = lang;
-    console.log(taskId);
     $.ajax({
         url: "http://localhost:8080/api/compile/code",
         datatype: 'json',
@@ -288,20 +292,37 @@ function sendCode() {
 
 function parseOutput(compilationSucceeded, lineOfError, outputOk, response, error) {
     var compileSuccess = "Compilation Succeeded: " + compilationSucceeded;
-    var responseVal = "Response: " + response;
-    var errorVal = "Error: " + error;
-    var outputOkVal = "OutputOK?: " + outputOk;
+    var text = "";
+    if (compilationSucceeded == false){
+        text = "Error: " + error;
 
-    $("#compileResponse").val(compileSuccess + "\n" + responseVal + "\n" + errorVal + "\n" + outputOkVal);
+        if (lineOfError != -1){
+            showLineWithError(lineOfError);
+        }
 
-    if (lineOfError != -1){
-        showLineWithError(lineOfError);
+        $("#compileResponse")[0].style.backgroundColor = "#ffcccc";
+        $("#labelWithResponse")[0].style.color = "red";
+    } else {
+        var outputOkVal = "Output: " + outputOk
+        text = "Response: " + response + "\n" + outputOkVal;
+        $("#labelWithResponse")[0].style.color = "black";
+        $("#compileResponse")[0].style.backgroundColor = "white";
     }
+
+    $("#compileResponse").val(compileSuccess + "\n" + text);
 }
 
 function showLineWithError(line) {
     var number = parseInt(line-1);
     editor.markText({line: number, ch: 0}, {line: number, ch: 200}, {
         className: "styled-background-error"
+    });
+}
+
+function showCreators() {
+    swal({
+        title: "Created by:",
+        text: "Piotr Karaś \n Patrycja Kopacz",
+        imageUrl: 'images/icon.png'
     });
 }

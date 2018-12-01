@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Online compiler</title>
     <meta charset="utf-8">
@@ -93,6 +93,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -140,7 +142,7 @@
 
         .sidenav {
             height: 100%;
-            width: 200px;
+            width: 225px;
             position: fixed;
             z-index: 1;
             top: 0;
@@ -180,7 +182,7 @@
         }
 
         #mainDiv {
-            margin-left: 200px; /* Same as the width of the sidenav */
+            margin-left: 225px; /* Same as the width of the sidenav */
         }
 
         @media screen and (max-height: 450px) {
@@ -206,7 +208,6 @@
     <div class="sidenav">
         <span class="" id="mainText">Online compiler</span>
 
-        <a href="#" id="send" onclick="sendCode();" style="">Compile and run</a>
         <a href="#" id="fullscreen" onclick="fullscreen();">Full screen</a>
         <a href="#" id="saveOutputToFile" onclick="saveOutputToFile();">Save Output To File</a>
         <a href="#" id="saveCodeToFile" onclick="saveCodeToFile();">Save Code To File</a>
@@ -217,10 +218,10 @@
         <a href="#selectLanguage" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >Languages</a>
         <ul class="collapse list-unstyled" id="selectLanguage">
             <li>
-                <a href="#" onclick="selectLanguage('cpp')">Cpp</a>
+                <a href="#" onclick="setLanguage('cpp')">Cpp</a>
             </li>
             <li>
-                <a href="#" onclick="selectLanguage('tcl')">TCL</a>
+                <a href="#" onclick="setLanguage('tcl')">TCL</a>
             </li>
         </ul>
 
@@ -284,14 +285,12 @@
             <li><a href="#" onclick="selectTheme('zenburn');">zenburn</a></li>
         </ul>
 
-        <li class="nav-divider"></li>
-
         <a href="#" onclick="clearEditor()" id="empty">Empty editor</a>
 
         <div id="exercisesList">
         </div>
 
-
+        <a href="#" id="creators" onclick="showCreators();">Creators</a>
     </div>
 
     <div class="code-editor">
@@ -309,8 +308,13 @@ int main()
 
     </div>
 
-    <div style="height: 225px" id="divWithTextAreas">
-        <p id="compilerModeDescription" style="color: #5FB3B3; font-size: large;">Current editor mode: Example Code</p>
+    <div style="height: 225px; margin-top: 10px" id="divWithTextAreas">
+        <div class="row" id="" >
+            <button type="button" id="send" onclick="sendCode();" class="btn btn-info btn-lg" style="margin-left: 15px;">Compile and run</button>
+            <span style="margin-left: 15px; font-size: large; padding-top: 13px;" class="badge badge-secondary badge-lg" id="currentLanguage">CPP</span>
+            <p id="compilerModeDescription" style="color: #5FB3B3; font-size: large; padding-top: 10px; margin-left: 15px">  Current editor mode: Example Code</p>
+        </div>
+
         <p id="hintP" style="color: #2E8B57; font-size: large;"></p>
         <div class="container">
             <div class="row">
@@ -319,7 +323,7 @@ int main()
                     <textarea rows="4"  class="form-control" id="input"></textarea>
                 </div>
                 <div class="col-sm">
-                    <label for="compileResponse">Response:</label>
+                    <label id="labelWithResponse" for="compileResponse">Response:</label>
                     <textarea rows="4" class="form-control" id="compileResponse"></textarea>
                 </div>
             </div>
