@@ -268,11 +268,13 @@ function getListOfExercises() {
 }
 
 function sendCode() {
-
     var code = editor.getValue();
     var input = $("#input").val();
     var language = lang;
     $.ajax({
+        beforeSend: function(){
+            $(".ajax-loader")[0].style.visibility = "visible";
+        },
         url: "http://localhost:8080/api/compile/code",
         datatype: 'json',
         type: "post",
@@ -283,13 +285,14 @@ function sendCode() {
             language: language,
             runCompiledProgram: false,
             taskId: taskId
-        })
+        }),
+        complete: function(){
+            $(".ajax-loader")[0].style.visibility = "hidden";
+        }
     }).then(function (data, status, jqxhr) {
         var obj = JSON.parse(data);
         parseOutput(obj.compilationSucceeded, obj.lineOfError, obj.outputOk, obj.response, obj.error);
     });
-
-
 }
 
 function parseOutput(compilationSucceeded, lineOfError, outputOk, response, error) {
