@@ -20,7 +20,7 @@ public class FileManager {
 
     private HashMap<String, HashMap<Integer, TaskFile>> taskFiles = new HashMap<>();
 
-    private FileManager(String pathWithTasks) {
+    public FileManager(String pathWithTasks) {
         for (File file : new File(pathWithTasks).listFiles()) {
 
             TaskFile task = new TaskFile(file);
@@ -31,9 +31,9 @@ public class FileManager {
 
     }
 
-    public TaskFile getTaskByLanguageAndId(String language, int id) {
-        return taskFiles.getOrDefault(language,new HashMap<>()).getOrDefault(id, null);
-    }
+//    public TaskFile getTaskByLanguageAndId(String language, int id) {
+//        return taskFiles.getOrDefault(language,new HashMap<>()).getOrDefault(id, null);
+//    }
 
     public Set<String> getLanguages(){
         return taskFiles.keySet();
