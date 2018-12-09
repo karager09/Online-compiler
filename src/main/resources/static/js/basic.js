@@ -47,8 +47,8 @@ function createEditor() {
 }
 
 function setSizingOfEditorOnChange() {
-    var height = $(window).height() - 225;
-    var width = $(window).width() - 225;
+    var height = $(window).height() - 245;
+    var width = $(window).width() - 255; //225
     editor.setSize(width, height);
     $("#divWithTextAreas")[0].style.width = width + "px";
     $("#input")[0].style.width = width / 3 +"px";
@@ -273,7 +273,7 @@ function sendCode() {
     var language = lang;
     $.ajax({
         beforeSend: function(){
-            $(".ajax-loader")[0].style.visibility = "visible";
+          /*  $("#loadingImage")[0].style.visibility = "visible";*/
         },
         url: "http://localhost:8080/api/compile/code",
         datatype: 'json',
@@ -287,7 +287,7 @@ function sendCode() {
             taskId: taskId
         }),
         complete: function(){
-            $(".ajax-loader")[0].style.visibility = "hidden";
+          /*  $("#loadingImage")[0].style.visibility = "hidden";*/
         }
     }).then(function (data, status, jqxhr) {
         var obj = JSON.parse(data);
@@ -311,9 +311,9 @@ function parseOutput(compilationSucceeded, lineOfError, outputOk, response, erro
         $("#compileResponse")[0].style.backgroundColor = "#d9ffcc";
     }
 
-    if (outputOkVal == false){
+    if (outputOkVal === false){
         swal("Sorry!", "The returned value is not the expected one", "error");
-    } else if (outputOkVal == true){
+    } else if (outputOkVal === true){
         swal("Good job!", "Success!", "success");
     }
 

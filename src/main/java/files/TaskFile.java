@@ -27,7 +27,7 @@ public class TaskFile {
     private LinkedList<Integer> lines = new LinkedList<>();
     private LinkedList<String> hints = new LinkedList<>();
 
-    TaskFile(File file) {
+    public TaskFile(File file) {
         if (file.canRead()) {
 
             try {

@@ -199,27 +199,38 @@
             overflow: auto;
         }
 
-        .ajax-loader {
+       /* .ajax-loader {
             visibility: hidden;
             position: fixed;
             z-index: +100 !important;
-        }
+        }*/
 
-        .ajax-loader img {
+/*
+
+        #loadingImage {
+            visibility: hidden;
+            z-index: +100 !important;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
+
+        .ajax-loader img {
+            visibility: hidden;
+            z-index: +100 !important;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+*/
+
     </style>
 
 </head>
 <body onresize="setSizingOfEditorOnChange()" >
-
-<div class="ajax-loader" id="loadingImage">
-    <img src="images/load.gif" class="img-responsive" />
-</div>
 
 <div class="container" id="mainDiv">
 
@@ -350,5 +361,9 @@ int main()
     </div>
 
 </div>
+
+<!--<div class="ajax-loader" id="loadingImage">-->
+   <!-- <img id="loadingImage" src="images/load2.gif" class="img-responsive" />-->
+<!--</div>-->
 </body>
 </html>
