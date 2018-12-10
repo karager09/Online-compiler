@@ -273,7 +273,7 @@ function sendCode() {
     var language = lang;
     $.ajax({
         beforeSend: function(){
-          /*  $("#loadingImage")[0].style.visibility = "visible";*/
+            $(".ajax-loader")[0].style.visibility = "visible";
         },
         url: "http://localhost:8080/api/compile/code",
         datatype: 'json',
@@ -287,7 +287,7 @@ function sendCode() {
             taskId: taskId
         }),
         complete: function(){
-          /*  $("#loadingImage")[0].style.visibility = "hidden";*/
+            $(".ajax-loader")[0].style.visibility = "hidden";
         }
     }).then(function (data, status, jqxhr) {
         var obj = JSON.parse(data);
