@@ -103,6 +103,10 @@
 
     <script type="text/javascript" src="js/basic.js"></script>
 
+
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.8.0.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.8.0.js"></script>
+
     <style>
         .CodeMirror-focused .cm-matchhighlight {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
@@ -199,19 +203,33 @@
             overflow: auto;
         }
 
-        .ajax-loader {
-            visibility: hidden;
-            position: fixed;
-            z-index: +100 !important;
-        }
+        /* .ajax-loader {
+             visibility: hidden;
+             position: fixed;
+             z-index: +100 !important;
+         }*/
 
-        .ajax-loader img {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        /*
 
+                #loadingImage {
+                    visibility: hidden;
+                    z-index: +100 !important;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+
+                .ajax-loader img {
+                    visibility: hidden;
+                    z-index: +100 !important;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+        */
 
     </style>
 
@@ -229,22 +247,21 @@
         <label id="inputLabel">Load Code From File<input type="file" id="uploadedFile" onchange="uploadFile()"></label>
         <a href="#" id="showHintButton" onclick="showHints([])" n>Show Hint</a>
 
-
         <a href="#selectLanguage" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >Languages</a>
         <ul class="collapse list-unstyled" id="selectLanguage">
             <li>
-                <a href="#" onclick="setLanguage('cpp')">Cpp</a>
+                <a href="#" id="selectCPP" onclick="setLanguage('cpp')">Cpp</a>
             </li>
             <li>
-                <a href="#" onclick="setLanguage('tcl')">TCL</a>
+                <a href="#" id="selectTCL" onclick="setLanguage('tcl')">TCL</a>
             </li>
         </ul>
 
 
         <a href="#selectTheme" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Themes</a>
         <ul class="collapse list-unstyled" id="selectTheme">
-            <li><a href="#" onclick="selectTheme('default');">default</a></li>
-            <li><a href="#" onclick="selectTheme('3024-day');">3024-day</a></li>
+            <li><a id="default" href="#" onclick="selectTheme('default');">default</a></li>
+            <li><a id="3024-day" href="#" onclick="selectTheme('3024-day');">3024-day</a></li>
             <li><a href="#" onclick="selectTheme('3024-night');">3024-night</a></li>
             <li><a href="#" onclick="selectTheme('abcdef');">abcdef</a></li>
             <li><a href="#" onclick="selectTheme('ambiance');">ambiance</a></li>
@@ -348,8 +365,90 @@ int main()
 
 </div>
 
-<div class="ajax-loader" id="loadingImage">
-    <img src="images/load2.gif" class="img-responsive" />
+<!--<div class="ajax-loader" id="loadingImage">-->
+<!-- <img id="loadingImage" src="images/load2.gif" class="img-responsive" />-->
+<!--</div>-->
+
+
+<div style="margin-left: 225px">
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
 </div>
+
+
+
+
+<script>
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+                break;
+            }
+        }
+    }
+
+    QUnit.test("fullscreen", function (assert) {
+        $("#fullscreen").trigger("click");
+        assert.equal(editor.getOption("fullScreen"), true);
+        editor.setOption("fullScreen", false);
+        assert.equal(editor.getOption("fullScreen"), false);
+    });
+
+    QUnit.test("basics", function( assert ) {
+        assert.equal(1,1);
+    });
+
+    QUnit.test("clear editor", function (assert) {
+        sleep(1000);
+        $("#empty").trigger("click");
+        assert.equal(editor.doc.size, 1);
+    });
+
+    QUnit.test("show hint", function (assert) {
+        sleep(1000);
+        $("#showHintButton").trigger("click");
+        assert.equal(hintIter, 0);
+        sleep(1000);
+        swal.close();
+    });
+
+    QUnit.test("selected cpp", function (assert) {
+        sleep(1000);
+        $("#selectCPP").trigger("click");
+        assert.equal(lang, "cpp");
+    });
+
+    QUnit.test("selected TCL", function (assert) {
+        sleep(1000);
+        $("#selectTCL").trigger("click");
+        assert.equal(lang, "tcl");
+    });
+
+    QUnit.test("selected another theme", function (assert) {
+        sleep(1000);
+        $("#3024-day").trigger("click");
+        assert.equal(editor.getOption("theme"), "3024-day");
+    });
+
+    QUnit.test("selected default theme", function (assert) {
+        sleep(1000);
+        $("#default").trigger("click");
+        assert.equal(editor.getOption("theme"), "default");
+    });
+
+    QUnit.test( "asynchronous test: async input focus", function( assert ) {
+        var done = assert.async();
+        $("#6").trigger("click");
+        setTimeout(function() {
+            console.log("done");
+            assert.equal(hintIter, 0);
+            done();
+        });
+    });
+
+</script>
+
+
 </body>
 </html>
