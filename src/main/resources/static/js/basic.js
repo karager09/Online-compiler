@@ -305,17 +305,17 @@ function parseOutput(compilationSucceeded, lineOfError, outputOk, response, erro
         $("#compileResponse")[0].style.backgroundColor = "#ffcccc";
         $("#labelWithResponse")[0].style.color = "red";
     } else {
-        var outputOkVal = "Output: " + outputOk;
+        // var outputOkVal = "Output: " + outputOk;
         text = response;
         $("#labelWithResponse")[0].style.color = "green";
         $("#compileResponse")[0].style.backgroundColor = "#d9ffcc";
     }
-
-    if (outputOkVal === false){
-        swal("Sorry!", "The returned value is not the expected one", "error");
-    } else if (outputOkVal === true){
-        swal("Good job!", "Success!", "success");
-    }
+    if (outputOk != null && compilationSucceeded)
+        if (outputOk === false){
+            swal("Sorry!", "The returned value is not the expected one", "error");
+        } else if (outputOk === true){
+            swal("Good job!", "Success!", "success");
+        }
 
     $("#compileResponse").val(text);
 }

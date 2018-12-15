@@ -1,0 +1,33 @@
+7
+#####
+Basics expression
+#####
+tcl
+#####
+Write proc that makes given number squared.
+#####
+proc procName {number} {
+	#write here your implementation, return [expr {$number*$number}]
+}
+puts [procName 5]
+puts [procName 8]
+#####
+25
+64
+#####
+0
+2
+3
+4
+#####
+"proc" is used to implement new function.
+#####
+After proc there is its unique name.
+#####
+In {} there are arguments to proc.
+#####
+expr arg ?arg arg ...?
+
+Evaluate an expression.
+Example:
+expr 8.2 + 6

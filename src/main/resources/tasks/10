@@ -1,0 +1,18 @@
+10
+#####
+Keyboard inputs
+#####
+tcl
+#####
+Get input from user and print each letter in new line.
+#####
+gets stdin raz
+foreach letter [split $raz ""] {
+	puts $letter
+}
+#####
+#####
+#####
+gets channelId variable
+
+Read a single line from a channel.

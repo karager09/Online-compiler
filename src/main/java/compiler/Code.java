@@ -244,12 +244,41 @@ public class Code {
         }
 
         if (taskId >= 0) {
+
             String requiredOutput = FileManager.get().getTaskById(taskId).getOutput();
-            if (!requiredOutput.equals("") && !requiredOutput.trim().equals(responseOfExecution.toString().trim()))
+            if (!requiredOutput.equals("") && !requiredOutput.trim().replace("\r\n", "\n").equals(responseOfExecution.toString().trim()))
                 codeResult.setOutputOk(false);
+
+            if (requiredOutput.equals(""))
+                codeResult.setOutputOk(null);
+        } else {
+            codeResult.setOutputOk(null);
         }
+
         codeResult.setResponse(responseOfExecution.toString());
-        codeResult.setError(responseOfExecutionError.toString());
+        String errorInfo = responseOfExecutionError.toString();
+        codeResult.setError(errorInfo);
+
+        if(!codeResult.getError().equals("")) {
+            codeResult.setCompilationSucceeded(false);
+
+            if (getLanguage().equals("tcl")) {
+                Pattern myPattern = Pattern.compile("line \\d+");
+                Matcher matcher = myPattern.matcher(errorInfo);
+                if (matcher.find()) {
+                    String lineWithNumbers = errorInfo.substring(matcher.start(), matcher.end());
+                    System.out.println(lineWithNumbers.substring(5));
+                    codeResult.setLineOfError(Integer.parseInt(lineWithNumbers.substring(5)));
+                }
+
+
+            }
+
+
+        }
+
+
+
         return codeResult;
     }
 }

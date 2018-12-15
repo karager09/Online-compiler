@@ -1,0 +1,30 @@
+8
+#####
+Creating dictionaries
+#####
+tcl
+#####
+Make dict named "myDict" with keys: one -> 1, two -> 2, mult -> (three -> 3, four -> 4)
+#####
+#write here your answer - first you need to create dict "myDict"
+set myDict [dict create]
+dict set myDict raz 1
+dict set myDict dwa 2
+dict set myDict mult three 3
+dict set myDict mult four 4
+
+puts $myDict
+#####
+raz 1 dwa 2 mult {three 3 four 4}
+#####
+7
+#####
+Dicts can be created with [dict create] function
+dict create ?key value ...?
+	Return a new dictionary that contains each of the key/value mappings listed as arguments (keys and values alternating, with each key being followed by its associated value.)
+#####
+dict set dictionaryVariable key ?key ...? value
+	This operation takes the name of a variable containing a dictionary value and places an updated dictionary value in that variable containing a mapping from the given key to the given value. When multiple keys are present, this operation creates or updates a chain of nested dictionaries. The updated dictionary value is returned.
+#####
+dict get dictionaryValue ?key ...?
+	Given a dictionary value (first argument) and a key (second argument), this will retrieve the value for that key. Where several keys are supplied, the behaviour of the command shall be as if the result of dict get $dictVal $key was passed as the first argument to dict get with the remaining arguments as second (and possibly subsequent) arguments.

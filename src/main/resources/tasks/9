@@ -1,0 +1,32 @@
+9
+#####
+For loop
+#####
+tcl
+#####
+Make simple loop that iterates value from 0 to 10 and print them with new line.
+#####
+for {set i 0} {$i <= 10} {incr i} {
+	puts $i
+}
+#####
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+#####
+#####
+for start test next body
+
+Tcl supports an iterated loop construct similar to the for loop in C. The for command in Tcl takes four arguments; an initialization, a test, an increment, and the body of code to evaluate on each pass through the loop.
+#####
+incr variable ?increment?
+
+Increments a variable.

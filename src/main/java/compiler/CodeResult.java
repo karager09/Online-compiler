@@ -5,7 +5,7 @@ public class CodeResult {
     private int lineOfError;
     private String response;
     private String error;
-    private boolean isOutputOk = true;
+    private Boolean isOutputOk = true;
 
     CodeResult(){
     }
@@ -49,11 +49,11 @@ public class CodeResult {
         this.error = error;
     }
 
-    public boolean isOutputOk() {
+    public Boolean isOutputOk() {
         return isOutputOk;
     }
 
-    public void setOutputOk(boolean outputOk) {
+    public void setOutputOk(Boolean outputOk) {
         isOutputOk = outputOk;
     }
 }
